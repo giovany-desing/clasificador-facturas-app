@@ -867,6 +867,47 @@ tab1, tab2, tab3, tab4 = st.tabs([
 with tab1:
     # Mostrar imagen de arquitectura
     st.image("image_arquitecture.png", use_container_width=True)
+    # Mostrar imagen de datos
+    st.image("image_data.png", use_container_width=True)
+    
+    # Sección de enfoque serverless
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 2rem auto; padding: 0 2rem;">
+        <h3 style="font-size: 1.8rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Construir sobre AWS con enfoque serverless (ECS Fargate, MWAA) en lugar de servidores tradicionales (EC2)
+        </h3>
+        
+        <h4 style="font-size: 1.4rem; font-weight: 700; color: #1d1d1f; margin-top: 2rem; margin-bottom: 1rem;">
+            Por qué:
+        </h4>
+        
+        <div style="margin-bottom: 2rem;">
+            <h5 style="font-size: 1.2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 0.8rem;">
+                Razones Técnicas:
+            </h5>
+            <ul style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-left: 1.5rem; margin-bottom: 1.5rem;">
+                <li>Zero gestión de infraestructura: No aprovisionar, parchear ni mantener servidores</li>
+                <li>Alta disponibilidad automática: Multi-AZ sin configuración manual</li>
+                <li>Elasticidad nativa: Auto-scaling basado en demanda (2-10 tasks según carga)</li>
+                <li>Pay-per-use: Pago por segundo de uso real, no por capacidad aprovisionada</li>
+                <li>Tiempo de deploy: Segundos vs minutos (EC2)</li>
+                <li>Patching automático: AWS gestiona actualizaciones de seguridad</li>
+            </ul>
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <h5 style="font-size: 1.2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 0.8rem;">
+                Razones de Negocio:
+            </h5>
+            <ul style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-left: 1.5rem; margin-bottom: 1.5rem;">
+                <li>Reducción de costos operacionales: ~60% menos vs EC2 gestionado manualmente</li>
+                <li>Time-to-market: Deploy en minutos vs días de configuración</li>
+                <li>Enfoque en valor: Equipo se enfoca en ML/ETL, no en infraestructura</li>
+                <li>Predictibilidad de costos: Sin sobre-aprovisionamiento, pago por uso real</li>
+            </ul>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Título Stack Tecnológico
     st.markdown("""
@@ -942,6 +983,716 @@ with tab1:
         </p>
         <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
             <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Define y aprovisiona 75+ recursos AWS en 2,317 líneas de código HCL: VPC, subnets, security groups, ECS cluster, task definitions, ALB + target groups, RDS instance, S3 buckets con policies, MWAA environment, IAM roles/policies, CloudWatch alarms. Organizado en módulos: networking/, compute/, storage/, security/. Comandos: terraform plan, apply, destroy.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Amazon ECR
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Amazon ECR (Elastic Container Registry)
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Registry privado de Docker images totalmente gestionado con integración nativa a ECS/Fargate. Escaneo automático de vulnerabilidades (CVEs) en imágenes vía Amazon Inspector. Replicación cross-region y lifecycle policies para eliminar tags antiguos. Comparado con Docker Hub público, ECR ofrece seguridad enterprise-grade y pull ilimitado sin rate limits.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Almacena 3 imágenes Docker privadas: (1) fastapi-app:latest (API backend), (2) training:v2.x (jobs de entrenamiento CNN), (3) mlflow:latest (servidor tracking). ECS Fargate pull images desde ECR usando IAM roles (no credenciales hardcoded). CI/CD pipeline (GitHub Actions) construye imágenes, las tagea con commit SHA, y las pushea a ECR automáticamente.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # AWS VPC & Networking
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            AWS VPC & Networking
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Virtual Private Cloud permite aislamiento de red completo con control granular sobre subnets, routing, NAT gateways, e Internet Gateways. Subnets públicas/privadas implementan arquitectura de defensa en profundidad: recursos internos (RDS, ECS tasks) en subnets privadas sin acceso directo desde internet. Security Groups actúan como firewalls stateful a nivel de instancia.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> VPC dedicada con CIDR 10.0.0.0/16 contiene: (1) 2 subnets públicas (AZs us-east-1a/1b) para ALB e NAT Gateway, (2) 2 subnets privadas para ECS Fargate tasks y RDS (Multi-AZ). Route tables dirigen tráfico: subnet privada → NAT Gateway → Internet para actualizaciones. Security Groups: ALB permite 80/443 desde 0.0.0.0/0, ECS permite 8000 solo desde ALB, RDS permite 3306 solo desde ECS.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Orquestación & Workflow
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Orquestación & Workflow
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Apache Airflow 2.8
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Apache Airflow 2.8
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Plataforma de orquestación de workflows líder con 10+ años de madurez. DAG (Directed Acyclic Graph) paradigm permite definir dependencias complejas entre tareas como código Python. Scheduler robusto con retry logic, SLA monitoring, backfill capabilities. Comparado con Prefect o Dagster (más nuevos), Airflow tiene ecosistema de operators más amplio (400+) y comunidad más grande.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Orquesta 3 DAGs críticos en producción: (1) etl_production.py cron 0 * * * * (cada hora) ejecuta 5 tasks: check_drive → download_files → ocr_processing → db_insert → cleanup, (2) train_production.py trigger manual ejecuta: fetch_data → preprocess → train_model → evaluate → register_mlflow → deploy_to_s3, (3) drift_production.py cron semanal ejecuta KS tests, calcula PSI (Population Stability Index), genera alertas si drift >0.15.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # MWAA Executors & Workers
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            MWAA Executors & Workers
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> MWAA usa CeleryExecutor que distribuye task execution entre múltiples workers escalables. Comparado con LocalExecutor (single-machine) o KubernetesExecutor (complejo), Celery ofrece balance ideal entre performance y simplicidad. Workers escalan automáticamente entre 1-10 basado en queue depth.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> CeleryExecutor con Redis como message broker coordina ejecución paralela de tasks. Configuración: 2 workers mínimo (alta disponibilidad), cada worker con 4 vCPU + 8GB RAM. Tasks de larga duración (OCR batch processing) ejecutan en workers dedicados, tasks livianas (DB queries) en pool shared. Logs de cada task se almacenan en CloudWatch con retention 30 días.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Machine Learning & Data Science
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Machine Learning & Data Science
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # TensorFlow 2.15 + Keras
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            TensorFlow 2.15 + Keras
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Framework de deep learning más adoptado en producción (usado por Google, Uber, Airbnb). TensorFlow 2.x con eager execution simplifica debugging vs TensorFlow 1.x. Keras high-level API permite prototipado rápido de arquitecturas complejas en <100 líneas. SavedModel format es estándar para deployment (TF Serving, ONNX compatible). GPU support nativo con CUDA.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Define arquitectura CNN de clasificación binaria: Input(224x224x3) → Conv2D(32, relu) → MaxPool → Conv2D(64, relu) → MaxPool → Conv2D(128, relu) → Flatten → Dense(256, relu) → Dropout(0.5) → Dense(1, sigmoid). Compilado con Adam optimizer (lr=0.001), binary_crossentropy loss. Entrenamiento: 50 epochs, batch_size=32, validation_split=0.2, early_stopping callback (patience=5). Output: probabilidad [0-1] de factura válida.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # NumPy 1.24 + Pandas 2.1
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            NumPy 1.24 + Pandas 2.1
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> NumPy es la librería fundamental para computación numérica en Python, base de todo el ecosistema científico. Arrays N-dimensionales optimizados en C ofrecen 10-100x speedup vs listas Python puras. Pandas construido sobre NumPy proporciona DataFrames (estructuras tabulares) con operaciones SQL-like. Sin equivalentes en otros lenguajes con esta madurez.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> NumPy maneja operaciones vectorizadas en preprocessing: normalización de imágenes (pixel values [0-255] → [0-1]), reshaping de tensores, cálculos de métricas (confusion matrix, accuracy). Pandas procesa datos tabulares: CSVs de facturas → DataFrames con columnas (nit, fecha, monto, label). Operaciones: filtering (df[df['monto'] > 1000000]), groupby agregaciones, merge entre datasets, exportación a MySQL.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Scikit-learn 1.3
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Scikit-learn 1.3
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Librería de ML clásico más completa con implementaciones optimizadas de 100+ algoritmos. Train/test split utilities, metrics (accuracy, precision, recall, ROC-AUC), preprocessing (StandardScaler, LabelEncoder), y model selection (GridSearchCV). Comparado con implementaciones custom, sklearn ofrece código battle-tested y API consistente.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Provee utilidades críticas para pipeline ML: (1) train_test_split() divide dataset en 70% train, 15% val, 15% test manteniendo stratification de clases, (2) classification_report() genera precision/recall/f1 por clase, (3) KolmogorovSmirnovTest detecta data drift comparando distribuciones de features entre training set y production data, (4) StandardScaler normaliza features numéricos (montos, confidences OCR) antes de alimentar CNN.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Matplotlib 3.8 + Seaborn 0.13
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Matplotlib 3.8 + Seaborn 0.13
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Matplotlib es el estándar de facto para visualización en Python, altamente customizable. Seaborn construido sobre matplotlib añade aesthetic defaults y plots estadísticos high-level. Generación programática de gráficos permite integración en pipelines automatizados (vs herramientas interactivas como Tableau).
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Genera visualizaciones para análisis ML y reportes: (1) Training curves accuracy/loss vs epochs con plt.plot(), (2) Confusion matrix heatmap con sns.heatmap() mostrando TP/FP/TN/FN, (3) ROC curves con AUC score, (4) Feature distributions histogramas comparando train vs production data para drift detection, (5) Drift reports line plots de PSI scores semanales. Gráficos guardados como PNG en S3 y registrados en MLflow artifacts.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # MLOps & Versionado
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            MLOps & Versionado
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # MLflow 2.9
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            MLflow 2.9
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Suite MLOps completa con 4 componentes: Tracking (experimentos), Projects (reproducibilidad), Models (deployment), Registry (gestión de versiones). Open-source y cloud-agnostic permite evitar vendor lock-in vs SageMaker. REST API y Python SDK facilitan integración en cualquier workflow. UI web intuitiva para stakeholders no-técnicos.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Tracking Server (puerto 5000) registra cada run con: mlflow.log_params({'epochs': 50, 'batch_size': 32}), mlflow.log_metrics({'accuracy': 0.92, 'val_loss': 0.18}), mlflow.log_artifacts('plots/'). Model Registry almacena modelos con stages: Development → Staging → Production. Metadata incluye: training timestamp, dataset version (DVC hash), hyperparameters, performance metrics. API permite fetch programático: model = mlflow.pyfunc.load_model('models:/invoice-classifier/Production').
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # DVC 3.30
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            DVC 3.30
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Solución Git-based para versionar datasets (GBs-TBs) que no caben en repositorios Git normales. .dvc files (lightweight pointers) se commiten a Git mientras datos reales viven en S3. Permite branching de datos similar a Git branches. DVC pipelines definen DAGs de data processing garantizando reproducibilidad end-to-end.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Versiona 3 componentes: (1) data/train.csv (5.2GB, 50k facturas etiquetadas), (2) models/cnn_model.h5 (240MB), (3) data/validation.csv (1.1GB). Workflow: dvc add data/train.csv crea train.csv.dvc con MD5 hash, dvc push sube archivo a S3 remote storage. Checkout específico: git checkout v2.3.1 && dvc checkout restaura exactamente dataset usado en experimento v2.3.1. Pipeline dvc.yaml define stages: preprocess → train → evaluate con dependencies automáticas.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Git & GitHub
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Git & GitHub
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Git es el sistema de control de versiones distribuido estándar en la industria. Branching/merging model permite desarrollo paralelo. GitHub añade colaboración (PRs, code review), issue tracking, y GitHub Actions para CI/CD. Comparado con GitLab (self-hosted) o Bitbucket, GitHub tiene ecosistema más amplio de integraciones.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Repositorio central con branching strategy: main (production-ready), develop (integration), feature branches feature/*. Commits siguen Conventional Commits: feat:, fix:, docs:. .gitignore excluye: datos crudos (.csv >10MB), secrets (.env), artefactos ML (*.h5), Terraform state (terraform.tfstate). GitHub Projects trackea tareas, milestones, sprints.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Base de Datos & Almacenamiento
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Base de Datos & Almacenamiento
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # MySQL 8.0
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            MySQL 8.0
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> RDBMS open-source maduro con 25+ años de producción. MySQL 8.0 introduce features enterprise: window functions, CTEs (Common Table Expressions), JSON datatype nativo, role-based access control. Performance mejorada ~2x vs 5.7 gracias a nuevo storage engine InnoDB. ACID compliance garantiza integridad transaccional.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Schema facturas_db con 5 tablas relacionadas: (1) invoices (id PK, nit, fecha, monto, ciudad, ocr_text TEXT, classification_score FLOAT, created_at), (2) clients (nit PK, nombre, ciudad), (3) predictions (id, invoice_id FK, model_version, probability, predicted_class, timestamp), (4) model_metadata (version, training_date, accuracy, f1_score), (5) audit_log (event_type, user, timestamp, details JSON). Índices: B-tree en nit, fecha; Full-text index en ocr_text para búsquedas.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # SQLAlchemy 2.0 ORM
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            SQLAlchemy 2.0 ORM
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> ORM (Object-Relational Mapping) más popular de Python que abstrae SQL en objetos Python. Previene SQL injection via parameterized queries. Connection pooling automático mejora performance. Migrations con Alembic permiten evolucionar schema sin downtime. Comparado con raw SQL, SQLAlchemy ofrece portabilidad entre databases (MySQL, PostgreSQL).
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Define modelos declarativos: class Invoice(Base): __tablename__ = 'invoices'; id = Column(Integer, primary_key=True); nit = Column(String(20), index=True). Queries: session.query(Invoice).filter(Invoice.monto > 1000000).all(). Relaciones: Invoice.client = relationship('Client', backref='invoices') permite invoice.client.nombre automáticamente. Connection pool: 5-20 conexiones reutilizables reduce overhead de crear conexiones por request.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Amazon S3 (detalles adicionales)
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Amazon S3 (detalles adicionales)
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Lifecycle Policies:</strong> Transición automática raw/ → S3 Glacier Deep Archive después 90 días reduce costos 95%. Versioning habilitado en models/ permite rollback a modelos anteriores. Server-side encryption (SSE-S3) encrypta datos at rest automáticamente.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Organización:</strong> Buckets estructurados por ambiente: etl-facturas-dev, etl-facturas-prod. Prefixes simulan directorios: s3://etl-facturas-prod/raw/2025/01/15/invoice_001.pdf. Uso de presigned URLs (expiran en 1 hora) permite descarga temporal sin credenciales AWS.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # API & Backend
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            API & Backend
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Pydantic 2.5
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Pydantic 2.5
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Librería de validación de datos usando Python type hints. Parsing automático y validación de requests/responses previene bugs de tipos en runtime. Performance optimizada con Rust core (10-50x faster vs v1). Generación automática de JSON schemas para OpenAPI. FastAPI construido sobre Pydantic aprovechando validación sin código boilerplate.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Define schemas de API: class PredictionRequest(BaseModel): nit: str = Field(pattern=r'^\d{9}$'); fecha: date; monto: float = Field(gt=0). Validación automática: request con nit='abc' retorna 422 Unprocessable Entity con error detallado. Response models garantizan consistencia: class PredictionResponse(BaseModel): invoice_id: int; is_valid: bool; confidence: float; processing_time_ms: int.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Uvicorn 0.24 ASGI Server
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Uvicorn 0.24 ASGI Server
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Servidor ASGI (Asynchronous Server Gateway Interface) ultra-rápido construido con uvloop (event loop optimizado en Cython). Soporta async/await nativo de FastAPI permitiendo concurrencia masiva con bajo overhead. Comparado con Gunicorn WSGI (sync), Uvicorn maneja 3-5x más requests/sec. Hot reload en desarrollo acelera iteración.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Ejecuta aplicación FastAPI en ECS containers con configuración: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4 --loop uvloop --log-level info. 4 workers aprovechan CPU multi-core. Access logs formato JSON enviados a CloudWatch. Graceful shutdown maneja SIGTERM de ECS draining correctamente finalizando requests in-flight.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # JWT (JSON Web Tokens)
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            JWT (JSON Web Tokens)
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Estándar de autenticación stateless (RFC 7519) ideal para APIs distribuidas. Tokens auto-contenidos (payload + signature) eliminan necesidad de session store centralizado. Comparado con session cookies, JWT escala horizontalmente sin sticky sessions. HS256 signing con secret key previene tampering.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Endpoint POST /auth/login valida credenciales contra DB, retorna JWT: {"access_token": "eyJ...", "token_type": "bearer", "expires_in": 3600}. Requests subsecuentes incluyen header Authorization: Bearer eyJ.... Middleware FastAPI (@Depends(get_current_user)) valida token, extrae user_id del payload, inyecta user object en endpoint. Tokens expiran en 1 hora, refresh tokens permiten renovación sin re-login.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Containerización & Orquestación
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Containerización & Orquestación
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Docker 24+
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Docker 24+
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Plataforma de containerización líder que garantiza "runs anywhere": dev laptop, CI, production. Aislamiento de procesos via Linux namespaces y cgroups. Imágenes inmutables versionadas garantizan reproducibilidad exacta. Comparado con VMs, containers comparten kernel resultando en startup <1 segundo y overhead mínimo (~5% vs ~20% VMs).
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> 3 Dockerfiles multi-stage optimizados: (1) Dockerfile.fastapi base Python 3.11-slim (130MB) → instala deps → COPY código → EXPOSE 8000 → CMD uvicorn, imagen final ~450MB. (2) Dockerfile.training incluye TensorFlow GPU support, imagen ~2.1GB. (3) Dockerfile.mlflow imagen ~380MB. Multi-stage builds reducen tamaño 60% separando build dependencies de runtime. .dockerignore excluye tests/, .git/, pycache/.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Docker Compose
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Docker Compose
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Herramienta para definir y ejecutar aplicaciones multi-container. docker-compose.yml declarativo define servicios, networks, volumes en single file. Ideal para desarrollo local replicando producción. Comparado con orchestrar containers manualmente, Compose simplifica networking (service discovery automático) y dependency management (depends_on).
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> docker-compose.yml define stack local: services api (FastAPI), db (MySQL 8.0), mlflow (tracking server), redis (Celery broker). Networking: shared network etl-network permite api conectar a db via hostname mysql://db:3306. Volumes: mysql-data:/var/lib/mysql persiste datos entre restarts. Comando: docker-compose up -d levanta stack completo en <30 segundos.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # CI/CD & DevOps
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            CI/CD & DevOps
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # GitHub Actions
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            GitHub Actions
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> CI/CD nativo de GitHub con integración seamless en repositorio. YAML-based workflows versionados como código. Matrix builds permiten testear múltiples Python versions en paralelo. 2,000 minutos/mes gratis para repos públicos. Comparado con Jenkins (self-hosted, complejo) o CircleCI (pago), GitHub Actions ofrece mejor DX (developer experience) para proyectos en GitHub.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> 3 workflows: (1) ci.yml trigger en PRs ejecuta: checkout code → setup Python 3.11 → install deps → run pytest + coverage → lint con ruff → type check con mypy. (2) cd.yml trigger en push a main ejecuta: build Docker images → tag con commit SHA → push a ECR → update ECS service con nueva task definition → wait for deployment. (3) drift-alert.yml trigger semanal ejecuta drift detection, envía Slack notification si PSI >0.15.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Pytest 7.4
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Pytest 7.4
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Framework de testing moderno con fixtures poderosas, parametrization, y plugins extensos. Sintaxis Pythonic (assert x == y) vs unittest verboso (self.assertEqual(x, y)). Pytest-cov integra coverage.py mostrando líneas no testeadas. Parallel execution con pytest-xdist acelera suites grandes.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Test suite con 120+ tests: (1) Unit tests tests/unit/ cubren funciones puras (OCR parsing, preprocessing, metrics calculation) con mocks de DB/S3. (2) Integration tests tests/integration/ prueban API endpoints con TestClient de FastAPI y DB test fixture. (3) Model tests tests/model/ validan accuracy >85% en test set, inference time <200ms. Coverage target: >80%. Fixtures: @pytest.fixture setup DB test, seed data, teardown.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Ruff & MyPy
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Ruff & MyPy
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Ruff es linter/formatter ultra-rápido (escrito en Rust) que reemplaza 10+ herramientas (Flake8, Black, isort, pyupgrade). 10-100x faster permite linting en <1 segundo. MyPy es type checker estático que detecta type errors antes de runtime. Type hints mejoran IDE autocomplete y detectan bugs early.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Ruff configurado en pyproject.toml: line-length=100, rules=E,F,W,I (errors, warnings, imports). Auto-fix on save en VSCode. MyPy en modo strict verifica: function signatures match, no implicit Any types, dict key types correctos. Pre-commit hook bloquea commits con lint errors o type mismatches. CI fails si ruff/mypy reportan issues.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Procesamiento de Documentos
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Procesamiento de Documentos
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Tesseract OCR 5.3
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Tesseract OCR 5.3
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Engine OCR open-source más preciso desarrollado por Google con soporte 100+ idiomas. Tesseract 5.x usa LSTM neural networks logrando 10-15% mejor accuracy vs Tesseract 4. Configurable vía flags (--psm, --oem) para diferentes layouts de documentos. Comparado con cloud APIs (AWS Textract $1.50/1000 pages), Tesseract es gratis e ilimitado.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Procesa PDFs convertidos a imágenes PNG (300 DPI via pdf2image). Configuración: --psm 6 (assume single uniform block of text), --oem 1 (LSTM only), -l spa (Spanish). Output: TSV con columnas (level, page_num, block_num, text, conf). Post-processing: filtra palabras con confidence <60%, aplica regex patterns para extraer NIT (\d{9}), fechas (\d{2}/\d{2}/\d{4}), montos ($[\d,]+). Procesa ~200 páginas/hora en CPU 4-core, accuracy ~85% en facturas con calidad media.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # pdf2image + Pillow
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            pdf2image + Pillow
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> pdf2image wrapper de Poppler convierte PDFs multi-página a imágenes PIL. Pillow (Python Imaging Library) librería estándar para manipulación de imágenes con operaciones: resize, rotate, crop, format conversion. Comparado con ImageMagick CLI, Pillow ofrece API Python nativa más fácil de integrar.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Pipeline: PDF → pdf2image convierte a list de PIL Images (300 DPI para preservar calidad OCR) → Pillow preprocessing: convert to grayscale, apply threshold (binarization), deskew si rotación detectada, resize to 224x224 para CNN input. Optimizaciones: JPEG compression quality=85 reduce tamaño 70% con minimal quality loss, max_width=2000px evita imágenes gigantes (>10MB).
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Regex (re module)
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Regex (re module)
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Regular expressions son herramienta fundamental para pattern matching en strings. Python re module compila patterns a bytecode optimizado. Regex permite extraer structured data de texto semi-estructurado (facturas OCR) sin ML complejo. Más rápido y determinístico que NER (Named Entity Recognition) models para casos bien definidos.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Patterns críticos: NIT_PATTERN = r'\b\d{9}\b' (9 dígitos exactos), DATE_PATTERN = r'\b\d{2}/\d{2}/\d{4}\b', AMOUNT_PATTERN = r'\$[\d,]+(?:\.\d{2})?', CITY_PATTERN = r'\b(Bogotá|Medellín|Cali|Barranquilla)\b'. Uso: nit_match = re.search(NIT_PATTERN, ocr_text); nit = nit_match.group() if nit_match else None. Validación: fechas parseadas con datetime, montos convertidos a float después de strip $ y ,.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Monitoreo & Observabilidad
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Monitoreo & Observabilidad
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # CloudWatch Logs Insights
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            CloudWatch Logs Insights
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Query engine SQL-like sobre logs de CloudWatch. Permite análisis ad-hoc sin exportar a herramienta externa (Splunk, ELK). Queries rápidas sobre TBs de logs con auto-complete y visualizaciones. Comparado con grep manual en archivos, Insights escala a millones de log entries y múltiples streams.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Queries comunes: (1) fields @timestamp, @message | filter @message like /ERROR/ | sort @timestamp desc | limit 100 encuentra últimos 100 errores, (2) stats count(*) by bin(5m) muestra requests/5min para detectar spikes, (3) parse @message /latency: (?<latency>\d+)ms/ | stats avg(latency), max(latency), p99(latency) calcula latency percentiles. Dashboards guardan queries frecuentes para monitoreo continuo.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # CloudWatch Alarms
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            CloudWatch Alarms
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Sistema de alertas basado en métricas con acciones automáticas (SNS notifications, auto-scaling, Lambda triggers). Comparado con polling manual, alarms detectan issues inmediatamente. Stateful (OK → ALARM → OK transitions) evita alert fatigue por flapping.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> 8 alarmas configuradas: (1) ecs-cpu-high trigger si CPU >80% por 5 minutos consecutivos → SNS email, (2) alb-5xx-errors trigger si rate >50 errors/min → PagerDuty, (3) rds-connections trigger si connections >90% del max → escala instance size, (4) api-latency-p99 trigger si P99 >2 segundos, (5) drift-detected trigger por custom metric desde DAG. Configuración: evaluation periods, datapoints to alarm, treat missing data as "notBreaching".
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Prometheus + Grafana (opcional local)
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Prometheus + Grafana (opcional local)
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Stack de monitoreo open-source estándar en Kubernetes/Docker. Prometheus scrape metrics vía HTTP endpoints, time-series database optimizada para queries rápidas. Grafana dashboards customizables con 100+ datasources. Comparado con CloudWatch (AWS-only), Prometheus es portable y gratis.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Deployment local opcional para development: Prometheus scrapes /metrics endpoint de FastAPI (vía prometheus-fastapi-instrumentator) cada 15s. Métricas expuestas: http_requests_total (counter), http_request_duration_seconds (histogram), active_connections (gauge). Grafana dashboards muestran: request rate, latency percentiles P50/P95/P99, error rate, CPU/memory por container. PromQL queries: rate(http_requests_total[5m]), histogram_quantile(0.95, http_request_duration_seconds).
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Seguridad
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Seguridad
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # AWS IAM (Identity and Access Management)
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            AWS IAM (Identity and Access Management)
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Sistema de permisos granulares que sigue principio de least privilege. IAM roles para servicios (vs access keys hardcoded) permiten rotación automática. Policies JSON declarativas versionadas como código en Terraform. IAM Access Analyzer detecta permisos demasiado permisivos.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> 5 roles definidos: (1) ecs-task-role permite ECS tasks leer de S3 (GetObject), escribir logs CloudWatch (PutLogEvents), leer Secrets Manager (GetSecretValue), (2) mwaa-execution-role permite MWAA ejecutar DAGs con acceso a S3/RDS, (3) lambda-drift-role (futuro) para Lambda triggers, (4) rds-monitoring-role para Enhanced Monitoring, (5) ecr-push-role para GitHub Actions push images. Policies: deny s3:DeleteBucket, require MFA para acciones destructivas.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # AWS Secrets Manager (detalles adicionales)
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            AWS Secrets Manager (detalles adicionales)
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rotation Lambdas:</strong> Lambda functions automáticas rotan DB passwords cada 30 días sin downtime. RDS connections transparentemente usan nuevo password después de rotación. Secrets versionados con staging labels: AWSCURRENT, AWSPENDING, AWSPREVIOUS.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Encriptación:</strong> Secrets encriptados at rest con AWS KMS (Key Management Service) usando customer managed key. KMS key policy restringe decrypt solo a ECS task role. CloudTrail audita cada GetSecretValue call: quién, cuándo, desde dónde.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # SSL/TLS Certificates
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            SSL/TLS Certificates
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> AWS Certificate Manager (ACM) provee certificados SSL/TLS gratis con renovación automática. Validación DNS vía Route 53 automatizada completamente. Comparado con Let's Encrypt self-managed, ACM elimina operational burden de renovaciones manuales cada 90 días.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Certificado wildcard *.etl-facturas.com attached a ALB listener HTTPS (puerto 443). Redirect automático HTTP (80) → HTTPS. TLS 1.2+ enforced, cipher suites modernos (ECDHE-RSA-AES128-GCM-SHA256). Certificate transparency logs públicos permiten auditoría.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -1543,1063 +2294,5 @@ with tab4:
         <h2 style="font-size: 2.5rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem; letter-spacing: -0.02em; text-align: center;">
             🎼 Orquestación Completa con Apache Airflow
         </h2>
-        <p style="font-size: 1.2rem; color: #333333 !important; text-align: center; margin-top: 1rem;">
-            Tres workflows coordinados que mantienen el sistema funcionando automáticamente
-        </p>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Explicación para reclutadores
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, rgba(0, 113, 227, 0.1) 0%, rgba(0, 113, 227, 0.05) 100%); padding: 2rem; border-radius: 12px; border-left: 5px solid #0071e3; margin: 2rem 0;">
-        <h3 style="font-size: 1.4rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
-            🎯 ¿Qué es Apache Airflow?
-        </h3>
-        <p style="font-size: 1.1rem; color: #000000 !important; line-height: 1.8; margin-bottom: 1rem;">
-            <strong>Apache Airflow</strong> es como un "director de orquesta" que coordina múltiples tareas automáticamente. 
-            En este proyecto, gestiona <strong>3 workflows diferentes</strong> que trabajan juntos para mantener el sistema funcionando sin supervisión humana.
-        </p>
-        <div style="background: white; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
-            <p style="margin: 0; color: #333333 !important; font-size: 1rem;">
-                <strong>💡 Analogía:</strong> Imagina que Airflow es un gerente que tiene 3 empleados (DAGs) trabajando en horarios diferentes, 
-                cada uno con tareas específicas, pero todos coordinados para mantener el sistema funcionando perfectamente.
-            </p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    
-    # Vista general de los 3 DAGs
-    st.markdown("""
-    <div style="margin: 3rem 0 2rem 0;">
-        <h3 style="font-size: 2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem; text-align: center;">
-            📊 Los 3 Workflows (DAGs)
-        </h3>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Cards de los 3 DAGs
-    col_dag1, col_dag2, col_dag3 = st.columns(3, gap="large")
-    
-    with col_dag1:
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(0, 113, 227, 0.15) 0%, rgba(0, 113, 227, 0.05) 100%); padding: 2rem; border-radius: 14px; border-top: 5px solid #0071e3; box-shadow: 0 4px 16px rgba(0,0,0,0.1); text-align: center; height: 100%;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">📥</div>
-            <h4 style="font-size: 1.3rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem;">
-                DAG 1: ETL Pipeline
-            </h4>
-            <p style="font-size: 0.95rem; color: #333333 !important; margin-bottom: 1rem;">
-                <strong>Horario:</strong> Cada hora<br/>
-                <strong>Objetivo:</strong> Procesar facturas nuevas
-            </p>
-            <div style="background: white; padding: 0.8rem; border-radius: 6px; margin-top: 1rem;">
-                <p style="margin: 0; font-size: 0.9rem; color: #000000 !important; font-weight: 600;">
-                    ⏰ 0 * * * *
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col_dag2:
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(255, 149, 0, 0.15) 0%, rgba(255, 149, 0, 0.05) 100%); padding: 2rem; border-radius: 14px; border-top: 5px solid #ff9500; box-shadow: 0 4px 16px rgba(0,0,0,0.1); text-align: center; height: 100%;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-            <h4 style="font-size: 1.3rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem;">
-                DAG 2: Drift Detection
-            </h4>
-            <p style="font-size: 0.95rem; color: #333333 !important; margin-bottom: 1rem;">
-                <strong>Horario:</strong> Domingos 3 AM<br/>
-                <strong>Objetivo:</strong> Detectar cambios en datos
-            </p>
-            <div style="background: white; padding: 0.8rem; border-radius: 6px; margin-top: 1rem;">
-                <p style="margin: 0; font-size: 0.9rem; color: #000000 !important; font-weight: 600;">
-                    ⏰ 0 3 * * 0
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_dag3:
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(88, 86, 214, 0.15) 0%, rgba(88, 86, 214, 0.05) 100%); padding: 2rem; border-radius: 14px; border-top: 5px solid #5856d6; box-shadow: 0 4px 16px rgba(0,0,0,0.1); text-align: center; height: 100%;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🤖</div>
-            <h4 style="font-size: 1.3rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem;">
-                DAG 3: Training Pipeline
-            </h4>
-            <p style="font-size: 0.95rem; color: #333333 !important; margin-bottom: 1rem;">
-                <strong>Horario:</strong> On-Demand<br/>
-                <strong>Objetivo:</strong> Reentrenar modelo
-            </p>
-            <div style="background: white; padding: 0.8rem; border-radius: 6px; margin-top: 1rem;">
-                <p style="margin: 0; font-size: 0.9rem; color: #000000 !important; font-weight: 600;">
-                    🖐️ Manual o Trigger
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    
-    # DAG 1: ETL Pipeline - Detalle completo
-    with st.expander("📥 **DAG 1: ETL PIPELINE - Procesamiento de Facturas (Cada Hora)**", expanded=True):
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(0, 113, 227, 0.1) 0%, rgba(0, 113, 227, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border-left: 5px solid #0071e3; margin-bottom: 1.5rem;">
-            <h4 style="font-size: 1.3rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem;">
-                📋 Información del DAG
-            </h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-                <div>
-                    <strong style="color: #0071e3 !important;">Nombre:</strong>
-                    <span style="color: #000000 !important;">process_invoices_etl</span>
-                </div>
-                <div>
-                    <strong style="color: #0071e3 !important;">Horario:</strong>
-                    <span style="color: #000000 !important;">0 * * * * (Cada hora)</span>
-                </div>
-                <div style="grid-column: 1 / -1;">
-                    <strong style="color: #0071e3 !important;">Objetivo:</strong>
-                    <span style="color: #000000 !important;">Procesar facturas nuevas automáticamente sin intervención humana</span>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # Tarea 1 del DAG 1
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #0071e3; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">🔍</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T1: Verificar Estado Inactivo
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: HttpSensor | Polling: Cada 30s | Timeout: 10 min
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(0, 113, 227, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin: 0;">
-                    Espera hasta que la API esté libre (estado = "inactivo"). Consulta <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">GET api:8000/procesar_facturas/status</code> cada 30 segundos.
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Flecha
-        st.markdown("""
-        <div style="text-align: center; margin: 1rem 0; font-size: 2rem; color: #0071e3;">⬇️</div>
-        """, unsafe_allow_html=True)
-        
-        # Tarea 2 del DAG 1
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #34c759; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">🚀</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T2: Activar ETL
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: SimpleHttpOperator
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(52, 199, 89, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin: 0;">
-                    Dispara el procesamiento enviando <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">POST api:8000/procesar_facturas</code>. 
-                    El sistema responde inmediatamente con <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">{"estado": "en_cola"}</code> y comienza a procesar en segundo plano.
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Procesamiento en FastAPI
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(88, 86, 214, 0.1) 0%, rgba(88, 86, 214, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid #5856d6; margin: 1.5rem 0; text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
-            <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
-                FastAPI ejecuta el procesamiento en segundo plano
-            </h4>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 1rem;">
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">
-                    📥 Descarga S3
-                </div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">
-                    🤖 Clasificación ML
-                </div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">
-                    📝 Extracción OCR
-                </div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">
-                    💾 Carga MySQL
-                </div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">
-                    ☁️ Sube Drive
-                </div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">
-                    🗑️ Limpieza
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Flecha
-        st.markdown("""
-        <div style="text-align: center; margin: 1rem 0; font-size: 2rem; color: #5856d6;">⬇️</div>
-        """, unsafe_allow_html=True)
-        
-        # Tarea 3 del DAG 1
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #ff9500; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">📊</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T3: Monitorear ETL
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: HttpSensor | Polling: Cada 60s | Timeout: 1 hora
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(255, 149, 0, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                    Monitorea el progreso consultando el estado cada minuto hasta que sea "completado" o "error".
-                </p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
-                    <div style="color: #333333 !important;">• descarga_s3 → 30%</div>
-                    <div style="color: #333333 !important;">• clasificacion_ml → 60%</div>
-                    <div style="color: #333333 !important;">• procesamiento_ocr → 80%</div>
-                    <div style="color: #333333 !important;">• carga_base_datos → 90%</div>
-                    <div style="color: #34c759 !important; font-weight: 600;">• completado → 100% ✅</div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Resultado DAG 1
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(52, 199, 89, 0.15) 0%, rgba(52, 199, 89, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid #34c759; margin-top: 1.5rem; text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
-            <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem;">
-                DAG 1 Completado
-            </h4>
-            <p style="font-size: 0.95rem; color: #333333 !important; margin: 0;">
-                Airflow resetea el estado y espera la próxima ejecución (en 1 hora)
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    
-    # DAG 2: Drift Detection
-    with st.expander("🔍 **DAG 2: DRIFT DETECTION - Detección de Cambios en Datos (Semanal)**", expanded=False):
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(255, 149, 0, 0.1) 0%, rgba(255, 149, 0, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border-left: 5px solid #ff9500; margin-bottom: 1.5rem;">
-            <h4 style="font-size: 1.3rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem;">
-                📋 Información del DAG
-            </h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-                <div>
-                    <strong style="color: #ff9500 !important;">Nombre:</strong>
-                    <span style="color: #000000 !important;">detect_data_drift</span>
-                </div>
-                <div>
-                    <strong style="color: #ff9500 !important;">Horario:</strong>
-                    <span style="color: #000000 !important;">0 3 * * 0 (Domingos 3 AM)</span>
-                </div>
-                <div style="grid-column: 1 / -1;">
-                    <strong style="color: #ff9500 !important;">Objetivo:</strong>
-                    <span style="color: #000000 !important;">Detectar cambios en la distribución de datos y activar reentrenamiento si es necesario</span>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Tareas del DAG 2
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #ff9500; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">📊</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T1: Preparar Datos
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: PythonOperator
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(255, 149, 0, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin: 0;">
-                    Descarga facturas recientes de Google Drive (preventivos/ y correctivos/) y las guarda en <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">/opt/airflow/drift_data/</code>
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="text-align: center; margin: 1rem 0; font-size: 2rem; color: #ff9500;">⬇️</div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #ff9500; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">🔬</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T2: Detectar Drift
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: PythonOperator
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(255, 149, 0, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                    Realiza análisis estadístico usando <strong>Kolmogorov-Smirnov test</strong> para comparar las características actuales con el baseline.
-                </p>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; margin-top: 0.5rem;">
-                    <p style="margin: 0; font-size: 0.9rem; color: #333333 !important;">
-                        Si <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">p_value < 0.05</code> Y <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">statistic > 0.3</code> → <strong style="color: #ff9500 !important;">Drift detectado ✅</strong>
-                    </p>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="text-align: center; margin: 1rem 0; font-size: 2rem; color: #ff9500;">⬇️</div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #ff9500; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">🔀</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T3: Decisión Reentrenamiento
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: BranchPythonOperator
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(255, 149, 0, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                    Evalúa si se detectó drift y decide el siguiente paso:
-                </p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
-                    <div style="background: rgba(52, 199, 89, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid #34c759;">
-                        <strong style="color: #000000 !important;">Si hay drift:</strong>
-                        <p style="color: #333333 !important; font-size: 0.9rem; margin: 0.3rem 0 0 0;">
-                            → Activa DAG 3 (Training)
-                        </p>
-                    </div>
-                    <div style="background: rgba(134, 134, 139, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid #86868b;">
-                        <strong style="color: #000000 !important;">Si NO hay drift:</strong>
-                        <p style="color: #333333 !important; font-size: 0.9rem; margin: 0.3rem 0 0 0;">
-                            → Finaliza (no se necesita reentrenar)
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    
-    # DAG 3: Training Pipeline
-    with st.expander("🤖 **DAG 3: TRAINING PIPELINE - Reentrenamiento del Modelo (On-Demand)**", expanded=False):
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(88, 86, 214, 0.1) 0%, rgba(88, 86, 214, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border-left: 5px solid #5856d6; margin-bottom: 1.5rem;">
-            <h4 style="font-size: 1.3rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem;">
-                📋 Información del DAG
-            </h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-                <div>
-                    <strong style="color: #5856d6 !important;">Nombre:</strong>
-                    <span style="color: #000000 !important;">train_invoice_model</span>
-                </div>
-                <div>
-                    <strong style="color: #5856d6 !important;">Horario:</strong>
-                    <span style="color: #000000 !important;">None (Manual o Triggered)</span>
-                </div>
-                <div style="grid-column: 1 / -1;">
-                    <strong style="color: #5856d6 !important;">Objetivo:</strong>
-                    <span style="color: #000000 !important;">Reentrenar el modelo con CI/CD completo y versionado automático</span>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Tareas del DAG 3
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #5856d6; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">🚀</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T1: Iniciar Entrenamiento
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: SimpleHttpOperator
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(88, 86, 214, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin: 0;">
-                    Dispara el pipeline de entrenamiento enviando <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">POST api:8000/train_model</code>
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="text-align: center; margin: 1rem 0; font-size: 2rem; color: #5856d6;">⬇️</div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(88, 86, 214, 0.1) 0%, rgba(88, 86, 214, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid #5856d6; margin: 1rem 0; text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
-            <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
-                FastAPI ejecuta el pipeline de entrenamiento
-            </h4>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 1rem;">
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">📥 Download Drive</div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">🔄 Preprocesamiento</div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">🤖 Train CNN</div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">✅ CI: F1>0.85</div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">📦 DVC Push</div>
-                <div style="background: white; padding: 0.8rem; border-radius: 6px; font-size: 0.85rem;">📊 Tracking MySQL</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="text-align: center; margin: 1rem 0; font-size: 2rem; color: #5856d6;">⬇️</div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #5856d6; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">📊</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T2: Monitorear CD
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: HttpSensor | Polling: Cada 120s | Timeout: 2 horas
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(88, 86, 214, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                    Monitorea el progreso del entrenamiento consultando <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">GET api:8000/train_model/status</code> cada 2 minutos.
-                </p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem; margin-top: 0.5rem;">
-                    <div style="color: #333333 !important;">• descarga_datos → 10%</div>
-                    <div style="color: #333333 !important;">• preprocesamiento → 20%</div>
-                    <div style="color: #333333 !important;">• entrenamiento → 50%</div>
-                    <div style="color: #333333 !important;">• validacion_ci → 70%</div>
-                    <div style="color: #333333 !important;">• dvc_push → 90%</div>
-                    <div style="color: #34c759 !important; font-weight: 600;">• completado → 100% ✅</div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="text-align: center; margin: 1rem 0; font-size: 2rem; color: #5856d6;">⬇️</div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #5856d6; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">✅</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T3: Verificar Promoción
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: PythonOperator
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(88, 86, 214, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin-bottom: 0.5rem;">
-                    Verifica si el modelo pasó las validaciones de CI (F1 > 0.85) y fue promovido a producción.
-                </p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
-                    <div style="background: rgba(52, 199, 89, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid #34c759;">
-                        <strong style="color: #000000 !important;">Promovido ✅</strong>
-                        <p style="color: #333333 !important; font-size: 0.9rem; margin: 0.3rem 0 0 0;">
-                            Modelo versionado en DVC + S3
-                        </p>
-                    </div>
-                    <div style="background: rgba(255, 59, 48, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid #ff3b30;">
-                        <strong style="color: #000000 !important;">Rechazado ⚠️</strong>
-                        <p style="color: #333333 !important; font-size: 0.9rem; margin: 0.3rem 0 0 0;">
-                            Alerta a Slack, modelo anterior se mantiene
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="text-align: center; margin: 1rem 0; font-size: 2rem; color: #5856d6;">⬇️</div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #5856d6; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                <div style="font-size: 2rem;">🔄</div>
-                <div>
-                    <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                        T4: Reset Estado
-                    </h4>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">
-                        Tipo: SimpleHttpOperator
-                    </p>
-                </div>
-            </div>
-            <div style="background: rgba(88, 86, 214, 0.05); padding: 1rem; border-radius: 8px;">
-                <p style="color: #000000 !important; font-size: 0.95rem; margin: 0;">
-                    Resetea el estado del sistema a "inactivo" para permitir futuros entrenamientos. 
-                    Envía <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">POST api:8000/train_model/reset</code>
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-
-    # Diagrama de Orquestación Creativo
-    st.markdown("""
-    <div style="margin: 3rem 0 2rem 0;">
-        <h3 style="font-size: 2.2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem; text-align: center;">
-            🎼 Diagrama de Orquestación Completa
-        </h3>
-        <p style="font-size: 1.2rem; color: #333333 !important; text-align: center; margin-bottom: 2rem;">
-            Visualiza cómo los 3 DAGs trabajan juntos como una orquesta perfectamente sincronizada
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    
-    
-    # DAG 1
-    st.markdown("""
-        <div style="position: relative; margin-bottom: 4rem; z-index: 2;">
-            <div style="display: flex; align-items: center; gap: 2rem;">
-                <div style="flex: 1; background: linear-gradient(135deg, rgba(0, 113, 227, 0.15) 0%, rgba(0, 113, 227, 0.05) 100%); padding: 2rem; border-radius: 14px; border: 3px solid #0071e3; box-shadow: 0 4px 16px rgba(0, 113, 227, 0.2);">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem;">📥</div>
-                        <div>
-                            <h4 style="font-size: 1.4rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                                DAG 1: ETL Pipeline
-                            </h4>
-                            <p style="font-size: 0.95rem; color: #0071e3 !important; margin: 0.3rem 0 0 0; font-weight: 600;">
-                                ⏰ Cada hora (0 * * * *)
-                            </p>
-                        </div>
-                    </div>
-                    <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
-                        <p style="color: #000000 !important; font-size: 0.95rem; margin: 0; line-height: 1.6;">
-                            <strong>Función:</strong> Procesa facturas nuevas automáticamente<br>
-                            <strong>Resultado:</strong> Datos en MySQL + Archivos en Google Drive<br>
-                            <strong>Frecuencia:</strong> 24 veces al día
-                        </p>
-                    </div>
-                </div>
-                <div style="width: 60px; height: 60px; background: #0071e3; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; font-weight: bold; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.4);">
-                    1
-                </div>
-                <div style="flex: 0; width: 100px;"></div>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    # Flecha y DAG 2
-    st.markdown("""
-        <div style="text-align: center; margin: 2rem 0; font-size: 2.5rem; color: #ff9500; z-index: 2; position: relative;">
-            ⬇️ <span style="font-size: 1rem; color: #000000 !important; margin-left: 1rem;">Genera datos que DAG 2 analiza</span>
-        </div>
-        
-        <div style="position: relative; margin-bottom: 4rem; z-index: 2;">
-            <div style="display: flex; align-items: center; gap: 2rem;">
-                <div style="flex: 0; width: 100px;"></div>
-                <div style="width: 60px; height: 60px; background: #ff9500; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; font-weight: bold; box-shadow: 0 4px 12px rgba(255, 149, 0, 0.4);">
-                    2
-                </div>
-                <div style="flex: 1; background: linear-gradient(135deg, rgba(255, 149, 0, 0.15) 0%, rgba(255, 149, 0, 0.05) 100%); padding: 2rem; border-radius: 14px; border: 3px solid #ff9500; box-shadow: 0 4px 16px rgba(255, 149, 0, 0.2);">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem;">🔍</div>
-                        <div>
-                            <h4 style="font-size: 1.4rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                                DAG 2: Drift Detection
-                            </h4>
-                            <p style="font-size: 0.95rem; color: #ff9500 !important; margin: 0.3rem 0 0 0; font-weight: 600;">
-                                ⏰ Domingos 3 AM (0 3 * * 0)
-                            </p>
-                        </div>
-                    </div>
-                    <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
-                        <p style="color: #000000 !important; font-size: 0.95rem; margin: 0; line-height: 1.6;">
-                            <strong>Función:</strong> Detecta cambios en la distribución de datos<br>
-                            <strong>Método:</strong> Kolmogorov-Smirnov test estadístico<br>
-                            <strong>Decisión:</strong> ¿Hay drift? → Activa DAG 3 automáticamente
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    # Flecha de decisión
-    st.markdown("""
-        <div style="text-align: center; margin: 2rem 0; z-index: 2; position: relative;">
-            <div style="display: inline-block; background: rgba(255, 149, 0, 0.1); padding: 1rem 2rem; border-radius: 8px; border: 2px dashed #ff9500;">
-                <p style="margin: 0; color: #000000 !important; font-size: 1rem; font-weight: 600;">
-                    🔀 Si detecta drift → Dispara DAG 3
-                </p>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    # DAG 3
-    st.markdown("""
-        <div style="position: relative; z-index: 2;">
-            <div style="display: flex; align-items: center; gap: 2rem;">
-                <div style="flex: 1; background: linear-gradient(135deg, rgba(88, 86, 214, 0.15) 0%, rgba(88, 86, 214, 0.05) 100%); padding: 2rem; border-radius: 14px; border: 3px solid #5856d6; box-shadow: 0 4px 16px rgba(88, 86, 214, 0.2);">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                        <div style="font-size: 3rem;">🤖</div>
-                        <div>
-                            <h4 style="font-size: 1.4rem; font-weight: 700; color: #000000 !important; margin: 0;">
-                                DAG 3: Training Pipeline
-                            </h4>
-                            <p style="font-size: 0.95rem; color: #5856d6 !important; margin: 0.3rem 0 0 0; font-weight: 600;">
-                                🖐️ On-Demand (Triggered por DAG 2 o Manual)
-                            </p>
-                        </div>
-                    </div>
-                    <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
-                        <p style="color: #000000 !important; font-size: 0.95rem; margin: 0; line-height: 1.6;">
-                            <strong>Función:</strong> Reentrena el modelo con nuevos datos<br>
-                            <strong>CI/CD:</strong> Valida F1 > 0.85 antes de promover<br>
-                            <strong>Versionado:</strong> DVC + S3 automático
-                        </p>
-                    </div>
-                </div>
-                <div style="width: 60px; height: 60px; background: #5856d6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; font-weight: bold; box-shadow: 0 4px 12px rgba(88, 86, 214, 0.4);">
-                    3
-                </div>
-                <div style="flex: 0; width: 100px;"></div>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    # Resultado final
-    st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(52, 199, 89, 0.15) 0%, rgba(52, 199, 89, 0.05) 100%); padding: 2rem; border-radius: 12px; border: 2px solid #34c759; margin-top: 3rem; text-align: center;">
-            <h4 style="font-size: 1.3rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
-                🎯 Resultado de la Orquestación
-            </h4>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1.5rem;">
-                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
-                    <strong style="color: #000000 !important;">Automatización</strong>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.5rem 0 0 0;">
-                        Sin intervención humana
-                    </p>
-                </div>
-                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
-                    <strong style="color: #000000 !important;">Monitoreo</strong>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.5rem 0 0 0;">
-                        Detección automática de cambios
-                    </p>
-                </div>
-                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
-                    <strong style="color: #000000 !important;">Auto-mejora</strong>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.5rem 0 0 0;">
-                        Reentrenamiento inteligente
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    
-    # Comunicación Airflow ↔ FastAPI
-    st.markdown("""
-    <div style="margin: 3rem 0 2rem 0;">
-        <h3 style="font-size: 2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem; text-align: center;">
-            📡 Comunicación Airflow ↔ FastAPI
-        </h3>
-        <p style="font-size: 1.1rem; color: #333333 !important; text-align: center; margin-bottom: 2rem;">
-            Cómo se comunican el orquestador y el ejecutor
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Contenedor principal
-    st.markdown("""
-    <div style="background: #ffffff; padding: 2rem; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin: 2rem 0;">
-    """, unsafe_allow_html=True)
-    
-    # Grid con 3 columnas
-    col_airflow, col_arrow, col_fastapi = st.columns([1, 0.3, 1])
-    
-    with col_airflow:
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(0, 113, 227, 0.1) 0%, rgba(0, 113, 227, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid #0071e3;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem; text-align: center;">🎼</div>
-            <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem; text-align: center;">
-                Apache Airflow
-            </h4>
-            <p style="font-size: 0.95rem; color: #333333 !important; margin-bottom: 1rem; text-align: center;">
-                <strong>Rol:</strong> Orquestador
-            </p>
-            <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0; padding-left: 1.2rem;">
-                <li>Programa tareas</li>
-                <li>Monitorea progreso</li>
-                <li>Gestiona errores</li>
-                <li>Coordina workflows</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_arrow:
-        st.markdown("""
-        <div style="text-align: center;">
-            <div style="font-size: 2rem; color: #0071e3; margin-bottom: 0.5rem;">↔️</div>
-            <div style="background: rgba(0, 113, 227, 0.1); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; color: #000000 !important;">
-                HTTP REST API
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_fastapi:
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, rgba(52, 199, 89, 0.1) 0%, rgba(52, 199, 89, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid #34c759;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem; text-align: center;">⚙️</div>
-            <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem; text-align: center;">
-                FastAPI
-            </h4>
-            <p style="font-size: 0.95rem; color: #333333 !important; margin-bottom: 1rem; text-align: center;">
-                <strong>Rol:</strong> Ejecutor
-            </p>
-            <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0; padding-left: 1.2rem;">
-                <li>Ejecuta ETL</li>
-                <li>Entrena modelos</li>
-                <li>Reporta estado</li>
-                <li>Procesa datos</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("""
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Sección de Endpoints
-    st.markdown("""
-    <div style="background: rgba(0, 113, 227, 0.05); padding: 1.5rem; border-radius: 8px; margin-top: 2rem;">
-        <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
-            🔄 Endpoints de Comunicación
-        </h4>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col_end1, col_end2 = st.columns(2)
-    
-    with col_end1:
-        st.markdown("""
-        <div style="background: white; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
-            <strong style="color: #0071e3 !important;">Airflow → FastAPI:</strong>
-            <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0 0 0; padding-left: 1.2rem;">
-                <li>POST /procesar_facturas</li>
-                <li>POST /train_model</li>
-                <li>POST /reset</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_end2:
-        st.markdown("""
-        <div style="background: white; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
-            <strong style="color: #34c759 !important;">FastAPI → Airflow:</strong>
-            <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0 0 0; padding-left: 1.2rem;">
-                <li>GET /status (respuestas)</li>
-                <li>Estado: "inactivo", "en_cola", "ejecutando", "completado"</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    
-    # Detalles del Procesamiento - Secciones corregidas
-    st.markdown("""
-    <div style="margin: 3rem 0 2rem 0;">
-        <h3 style="font-size: 2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem; text-align: center;">
-            🔧 Detalles del Procesamiento
-        </h3>
-        <p style="font-size: 1.1rem; color: #333333 !important; text-align: center; margin-bottom: 2rem;">
-            Una vez activado, el sistema ejecuta estas 6 fases automáticamente
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Fase 0: Verificación
-    with st.expander("✅ **FASE 0: VERIFICACIÓN DE PRERREQUISITOS**", expanded=True):
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #ff9500; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                <div style="background: rgba(52, 199, 89, 0.1); padding: 1rem; border-radius: 8px; border-left: 3px solid #34c759;">
-                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">☁️</div>
-                    <strong style="color: #000000 !important;">Google Drive</strong>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">OAuth2 valida token.json</p>
-                </div>
-                <div style="background: rgba(52, 199, 89, 0.1); padding: 1rem; border-radius: 8px; border-left: 3px solid #34c759;">
-                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💾</div>
-                    <strong style="color: #000000 !important;">MySQL RDS</strong>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">Test query a textil DB</p>
-                </div>
-                <div style="background: rgba(52, 199, 89, 0.1); padding: 1rem; border-radius: 8px; border-left: 3px solid #34c759;">
-                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📦</div>
-                    <strong style="color: #000000 !important;">AWS S3</strong>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">Lista bucket mes-en-curso</p>
-                </div>
-                <div style="background: rgba(52, 199, 89, 0.1); padding: 1rem; border-radius: 8px; border-left: 3px solid #34c759;">
-                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🤖</div>
-                    <strong style="color: #000000 !important;">Modelo ML</strong>
-                    <p style="font-size: 0.9rem; color: #666666 !important; margin: 0.3rem 0 0 0;">Verifica modelo_facturas_final.h5<br/>Si NO existe → dvc pull desde S3</p>
-                </div>
-            </div>
-            <div style="background: rgba(255, 149, 0, 0.1); padding: 1rem; border-radius: 8px; text-align: center; border: 2px solid #ff9500;">
-                <p style="margin: 0; color: #000000 !important; font-weight: 600;">
-                    ⚠️ Si alguno falla → Estado: "error", termina proceso
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Fase 1: Descarga S3
-    with st.expander("📥 **FASE 1: DESCARGA DESDE S3**", expanded=False):
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #0071e3; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div style="background: rgba(0, 113, 227, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-                <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">📥 Boto3 conecta a AWS S3</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div>
-                        <strong style="color: #0071e3 !important;">Bucket:</strong>
-                        <span style="color: #000000 !important;">mes-en-curso</span>
-                    </div>
-                    <div>
-                        <strong style="color: #0071e3 !important;">Archivos:</strong>
-                        <span style="color: #000000 !important;">*.pdf</span>
-                    </div>
-                    <div>
-                        <strong style="color: #0071e3 !important;">Destino:</strong>
-                        <span style="color: #000000 !important;">/tmp/mes_en_curso/</span>
-                    </div>
-                </div>
-            </div>
-            <div style="background: rgba(0, 113, 227, 0.05); padding: 1rem; border-radius: 8px;">
-                <h4 style="font-size: 1rem; font-weight: 700; color: #000000 !important; margin-bottom: 0.5rem;">Archivos descargados:</h4>
-                <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0; padding-left: 1.5rem;">
-                    <li>factura001.pdf (340 KB) ✅</li>
-                    <li>factura002.pdf (450 KB) ✅</li>
-                    <li>factura003.pdf (380 KB) ✅</li>
-                </ul>
-            </div>
-            <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(52, 199, 89, 0.1); border-radius: 8px;">
-                <strong style="color: #000000 !important;">Progreso: 30%</strong>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Fase 2: Clasificación ML
-    with st.expander("🤖 **FASE 2: CLASIFICACIÓN CON INTELIGENCIA ARTIFICIAL**", expanded=False):
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #5856d6; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div style="background: rgba(88, 86, 214, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-                <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">🤖 Red Neuronal CNN analiza cada factura</h4>
-                <div style="margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 6px; border-left: 3px solid #34c759;">
-                    <strong style="color: #000000 !important;">factura001.pdf:</strong>
-                    <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                        <li>PDF → Imagen RGB 224x224 (pdf2image)</li>
-                        <li>Normaliza [0, 1] (NumPy)</li>
-                        <li>Pasa por CNN (TensorFlow)</li>
-                        <li>Score: 0.23 (< 0.5)</li>
-                        <li><strong style="color: #34c759 !important;">Clasificación: PREVENTIVA ✅</strong></li>
-                    </ul>
-                </div>
-                <div style="margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 6px; border-left: 3px solid #ff9500;">
-                    <strong style="color: #000000 !important;">factura002.pdf:</strong>
-                    <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                        <li>Score: 0.87 (> 0.5)</li>
-                        <li><strong style="color: #ff9500 !important;">Clasificación: CORRECTIVA ⚠️</strong></li>
-                    </ul>
-                </div>
-                <div style="padding: 1rem; background: white; border-radius: 6px; border-left: 3px solid #34c759;">
-                    <strong style="color: #000000 !important;">factura003.pdf:</strong>
-                    <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                        <li>Score: 0.15</li>
-                        <li><strong style="color: #34c759 !important;">Clasificación: PREVENTIVA ✅</strong></li>
-                    </ul>
-                </div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: rgba(52, 199, 89, 0.1); border-radius: 8px;">
-                <strong style="color: #000000 !important;">Progreso: 60%</strong>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Fase 3: OCR
-    with st.expander("📝 **FASE 3: EXTRACCIÓN DE DATOS (OCR)**", expanded=False):
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #ff2d55; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div style="background: rgba(255, 45, 85, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-                <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">📝 Tesseract OCR lee cada factura</h4>
-                <div style="margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 6px;">
-                    <strong style="color: #000000 !important;">factura001.pdf (Preventiva):</strong>
-                    <div style="margin-top: 0.5rem; padding: 0.8rem; background: rgba(0,0,0,0.03); border-radius: 4px; font-family: monospace; font-size: 0.85rem; color: #333333 !important;">
-                        "ORDEN DE COMPRA #12345<br/>
-                        Fecha: 2024-01-15<br/>
-                        Producto: Tela industrial<br/>
-                        Cantidad: 100 metros<br/>
-                        Total: $1,500.00"
-                    </div>
-                    <div style="margin-top: 0.8rem;">
-                        <strong style="color: #ff2d55 !important;">Campos extraídos:</strong>
-                        <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                            <li>orden_compra: 12345</li>
-                            <li>fecha: "2024-01-15"</li>
-                            <li>productos: ["Tela industrial"]</li>
-                            <li>cantidades: [100]</li>
-                            <li>totales: [1500.00]</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: rgba(52, 199, 89, 0.1); border-radius: 8px;">
-                <strong style="color: #000000 !important;">Progreso: 80%</strong>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Fase 4: Carga MySQL
-    with st.expander("💾 **FASE 4: CARGA EN MYSQL (AWS RDS)**", expanded=False):
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #34c759; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div style="background: rgba(52, 199, 89, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-                <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">💾 SQLAlchemy inserta en base de datos</h4>
-                <p style="color: #333333 !important; margin-bottom: 1rem;">
-                    <strong>Conexión:</strong> <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">textil.rds.amazonaws.com/textil</code>
-                </p>
-                <div style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
-                    <strong style="color: #000000 !important;">Transacciones ejecutadas:</strong>
-                    <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                        <li>ventas_preventivas: 3 registros ✅</li>
-                        <li>ventas_correctivas: 1 registro ✅</li>
-                    </ul>
-                </div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: rgba(52, 199, 89, 0.1); border-radius: 8px;">
-                <strong style="color: #000000 !important;">Progreso: 90% | 4 registros insertados</strong>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Fase 5: Google Drive
-    with st.expander("☁️ **FASE 5: ARCHIVO EN GOOGLE DRIVE**", expanded=False):
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #ff9500; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div style="background: rgba(255, 149, 0, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-                <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">☁️ Google Drive API sube archivos</h4>
-                <div style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
-                    <strong style="color: #000000 !important;">Estructura:</strong>
-                    <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                        <li>📁 facturas/historico/ → 3 facturas ✅</li>
-                        <li>📁 facturas/preventivos/ → 2 facturas ✅</li>
-                        <li>📁 facturas/correctivos/ → 1 factura ✅</li>
-                    </ul>
-                </div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: rgba(52, 199, 89, 0.1); border-radius: 8px;">
-                <strong style="color: #000000 !important;">Progreso: 95% | Total subido: 6 archivos</strong>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Fase 6: Limpieza
-    with st.expander("🗑️ **FASE 6: LIMPIEZA AUTOMÁTICA**", expanded=False):
-        st.markdown("""
-        <div style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border-top: 4px solid #86868b; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <div style="background: rgba(134, 134, 139, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-                <h4 style="font-size: 1.1rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">🗑️ Limpia recursos para evitar duplicados</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div style="background: white; padding: 1rem; border-radius: 6px;">
-                        <strong style="color: #000000 !important;">1. Elimina de S3:</strong>
-                        <ul style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0; padding-left: 1.5rem;">
-                            <li>factura001.pdf ✅</li>
-                            <li>factura002.pdf ✅</li>
-                            <li>factura003.pdf ✅</li>
-                        </ul>
-                    </div>
-                    <div style="background: white; padding: 1rem; border-radius: 6px;">
-                        <strong style="color: #000000 !important;">2. Elimina locales:</strong>
-                        <p style="color: #333333 !important; font-size: 0.9rem; margin: 0.5rem 0;">
-                            <code style="background: rgba(0,0,0,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">rm -rf /tmp/mes_en_curso/</code> ✅
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, rgba(52, 199, 89, 0.2) 0%, rgba(52, 199, 89, 0.1) 100%); border-radius: 8px; border: 2px solid #34c759;">
-                <strong style="color: #000000 !important; font-size: 1.1rem;">Progreso: 100% ✅</strong>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # Resultado final
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, rgba(52, 199, 89, 0.15) 0%, rgba(52, 199, 89, 0.05) 100%); padding: 2rem; border-radius: 12px; border: 2px solid #34c759; margin: 3rem 0; text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
-        <h3 style="font-size: 1.8rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
-            PROCESO COMPLETADO
-        </h3>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;">
-            <div style="background: white; padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📊</div>
-                <strong style="color: #000000 !important;">3 facturas</strong>
-                <p style="font-size: 0.85rem; color: #666666 !important; margin: 0.3rem 0 0 0;">clasificadas</p>
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💾</div>
-                <strong style="color: #000000 !important;">4 registros</strong>
-                <p style="font-size: 0.85rem; color: #666666 !important; margin: 0.3rem 0 0 0;">en MySQL</p>
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">☁️</div>
-                <strong style="color: #000000 !important;">6 archivos</strong>
-                <p style="font-size: 0.85rem; color: #666666 !important; margin: 0.3rem 0 0 0;">en Google Drive</p>
-            </div>
-        </div>
-        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid rgba(0,0,0,0.1);">
-            <p style="font-size: 1.1rem; color: #000000 !important; margin: 0; font-weight: 600;">
-                ⏱️ Duración total: ~5 minutos | 🎯 SIN INTERVENCIÓN HUMANA | ✅ CERO ERRORES
-            </p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("---")
