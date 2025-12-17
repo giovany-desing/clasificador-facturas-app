@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from PIL import Image
 import os
 from pathlib import Path
@@ -540,6 +541,11 @@ st.markdown("""
         color: #1d1d1f !important;
     }
     
+    .glass-card h4 {
+        color: #000000 !important;
+        font-weight: 700 !important;
+    }
+    
     .glass-card p,
     .glass-card li {
         color: #1d1d1f !important;
@@ -709,242 +715,236 @@ with st.sidebar:
 st.markdown("""
 <div style="text-align: center; margin: 4rem 0 3rem 0;">
     <h1 style="font-size: 3.5rem; font-weight: 700; color: #1d1d1f; letter-spacing: -0.02em; margin-bottom: 1.5rem; line-height: 1.1;">
-        Sistema MLOps para Clasificación<br/>Inteligente de Facturas
+        Sistema ETL de Facturas con Machine Learning
     </h1>
-    <p style="font-size: 1.5rem; color: #86868b; font-weight: 400; max-width: 800px; margin: 0 auto; line-height: 1.6;">
-        Diseñé y desarrollé un sistema de Machine Learning Operations (MLOps) de nivel producción que elimina completamente la intervención humana en el procesamiento de facturas, transformando archivos PDF en datos estructurados listos para análisis en menos de 60 segundos.
-    </p>
-</div>
+    </div>
 """, unsafe_allow_html=True)
 
-# Sección: Tres disciplinas técnicas
+# Sección: ¿Qué es este proyecto?
 st.markdown("""
-<div style="margin: 3rem 0;">
-    <p style="font-size: 1.3rem; color: #333333 !important; text-align: center; margin-bottom: 2.5rem; font-weight: 500;">
-        El sistema integra tres disciplinas técnicas en una solución cohesiva:
+<div style="max-width: 900px; margin: 0.3rem auto; text-align: left; line-height: 1.4;">
+    <h2 style="font-size: 1.8rem; font-weight: 700; color: #0051a3; margin-top: 0; margin-bottom: 0.2rem;">
+        ¿Qué es este proyecto?
+    </h2>
+    <p style="font-size: 1.1rem; color: #1d1d1f; font-weight: 400; margin-bottom: 0.4rem; line-height: 1.4;">
+        Este proyecto es un sistema ETL empresarial que automatiza end-to-end el procesamiento y clasificación de facturas textiles mediante inteligencia artificial. El flujo comienza extrayendo facturas en PDF desde AWS S3, las procesa con un modelo CNN custom que clasifica cada factura como correctiva o preventiva con más del 90% de precisión, aplica OCR (Tesseract) para extraer información estructurada (números de orden, productos, cantidades, totales), y almacena los datos en MySQL (AWS RDS) según su clasificación. Las facturas procesadas se suben automáticamente a Google Drive mediante su API OAuth 2.0 en tres ubicaciones: carpeta "histórico" (todas), "correctivos" (clase 0), y "preventivos" (clase 1), finalizando con la limpieza automática de archivos temporales y eliminación de facturas ya procesadas del bucket S3.<br/><br/>Todo el pipeline está orquestado con Apache Airflow en Amazon MWAA ejecutándose cada hora, gestionando además pipelines de entrenamiento del modelo bajo demanda, detección semanal de data drift mediante tests estadísticos que disparan reentrenamiento automático, y tracking de experimentos con MLflow y versionado de modelos con DVC. La arquitectura completa está desplegada sobre servicios serverless de AWS (ECS Fargate, ALB, CloudWatch, Secrets Manager) con auto-scaling automático de 2 a 10 tasks según demanda, y toda la infraestructura de 75+ recursos está definida mediante Infrastructure as Code con Terraform (2,300+ líneas), permitiendo deployment reproducible, versionado en Git, y CI/CD completo con GitHub Actions que ejecuta tests, valida calidad del modelo (F1 > 0.85), construye imágenes Docker, las publica en ECR, y despliega actualizaciones sin downtime.
     </p>
 </div>
 """, unsafe_allow_html=True)
 
-# Tres columnas para las disciplinas técnicas
-col_disc1, col_disc2, col_disc3 = st.columns(3, gap="large")
+# Flujo de ETL resumido
+st.markdown("""
+<div style="max-width: 1200px; margin: 2rem auto;">
+    <h3 style="font-size: 1.5rem; font-weight: 700; color: #0051a3; margin-bottom: 1.5rem; text-align: center;">
+        Flujo de ETL resumido
+    </h3>
+</div>
+""", unsafe_allow_html=True)
 
-with col_disc1:
-    st.markdown("""
-    <div class="glass-card" style="background: #ffffff; padding: 2rem; border-radius: 14px; border-top: 4px solid #0071e3; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); height: 100%;">
-        <h3 style="font-size: 1.5rem; font-weight: 700; color: #000000 !important; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
-            1. 🤖 Machine Learning Engineering
-        </h3>
-        <ul style="color: #000000 !important; line-height: 1.9; font-size: 1.05rem; margin: 0; padding-left: 1.2rem;">
-            <li style="margin-bottom: 1rem;">Red neuronal convolucional <strong style="color: #000000 !important;">(CNN)</strong> para clasificación de imágenes</li>
-            <li style="margin-bottom: 1rem;">Precisión del <strong style="color: #34c759 !important;">95%</strong> en categorización de facturas</li>
-            <li style="margin-bottom: 1rem;">OCR avanzado con <strong style="color: #000000 !important;">Tesseract</strong> para extracción de texto</li>
-            <li style="margin-bottom: 0;">Versionado de modelos con <strong style="color: #000000 !important;">DVC</strong> en AWS S3</li>
-        </ul>
+# Pipeline ETL de Facturas - Flujo horizontal compacto
+st.markdown("""
+<div style="max-width: 1400px; margin: 0 auto 2rem auto; padding: 1rem; background: #f8f9fa; border-radius: 12px; overflow-x: auto;">
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.4rem; flex-wrap: nowrap; min-width: 900px;">
+        <div style="background: white; padding: 0.6rem 0.8rem; border-radius: 6px; border: 2px solid #0051a3; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 130px; flex-shrink: 0;">
+            <div style="font-size: 1.2rem; margin-bottom: 0.15rem;">☁️</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #0051a3; margin-bottom: 0.15rem;">S3 Bucket</div>
+            <div style="font-size: 0.7rem; color: #666666;">(mes en curso)</div>
+        </div>
+        <div style="font-size: 1.2rem; color: #0051a3; font-weight: bold; flex-shrink: 0;">→</div>
+        <div style="background: white; padding: 0.6rem 0.8rem; border-radius: 6px; border: 2px solid #5856d6; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 160px; flex-shrink: 0;">
+            <div style="font-size: 1.2rem; margin-bottom: 0.15rem;">🎯</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #5856d6; margin-bottom: 0.15rem;">Clasificación ML</div>
+            <div style="font-size: 0.7rem; color: #666666;">(CNN: correctiva vs preventiva)</div>
+        </div>
+        <div style="font-size: 1.2rem; color: #5856d6; font-weight: bold; flex-shrink: 0;">→</div>
+        <div style="background: white; padding: 0.6rem 0.8rem; border-radius: 6px; border: 2px solid #34c759; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 160px; flex-shrink: 0;">
+            <div style="font-size: 1.2rem; margin-bottom: 0.15rem;">🔍</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #34c759; margin-bottom: 0.15rem;">Extracción OCR</div>
+            <div style="font-size: 0.7rem; color: #666666;">(Tesseract: orden, fecha, productos, $)</div>
+        </div>
+        <div style="font-size: 1.2rem; color: #34c759; font-weight: bold; flex-shrink: 0;">→</div>
+        <div style="background: white; padding: 0.6rem 0.8rem; border-radius: 6px; border: 2px solid #ff9500; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 120px; flex-shrink: 0;">
+            <div style="font-size: 1.2rem; margin-bottom: 0.15rem;">💾</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #ff9500; margin-bottom: 0.15rem;">MySQL</div>
+            <div style="font-size: 0.7rem; color: #666666;">(AWS RDS)</div>
+        </div>
+        <div style="font-size: 1.2rem; color: #ff9500; font-weight: bold; flex-shrink: 0;">→</div>
+        <div style="background: white; padding: 0.6rem 0.8rem; border-radius: 6px; border: 2px solid #ff2d55; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 160px; flex-shrink: 0;">
+            <div style="font-size: 1.2rem; margin-bottom: 0.15rem;">📤</div>
+            <div style="font-size: 0.85rem; font-weight: 700; color: #ff2d55; margin-bottom: 0.15rem;">Google Drive</div>
+            <div style="font-size: 0.7rem; color: #666666;">(histórico, correctivos, preventivos)</div>
+        </div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
-with col_disc2:
-    st.markdown("""
-    <div class="glass-card" style="background: #ffffff; padding: 2rem; border-radius: 14px; border-top: 4px solid #34c759; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); height: 100%;">
-        <h3 style="font-size: 1.5rem; font-weight: 700; color: #000000 !important; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
-            2. 📊 Data Engineering
-        </h3>
-        <ul style="color: #000000 !important; line-height: 1.9; font-size: 1.05rem; margin: 0; padding-left: 1.2rem;">
-            <li style="margin-bottom: 1rem;">Pipeline <strong style="color: #000000 !important;">ETL automatizado</strong> (Extract-Transform-Load)</li>
-            <li style="margin-bottom: 1rem;">Procesamiento <strong style="color: #000000 !important;">paralelo</strong> de múltiples documentos</li>
-            <li style="margin-bottom: 1rem;">Almacenamiento dual: <strong style="color: #000000 !important;">MySQL RDS</strong> (análisis) + <strong style="color: #000000 !important;">Google Drive</strong> (archivo)</li>
-            <li style="margin-bottom: 0;">Limpieza <strong style="color: #000000 !important;">automática</strong> de recursos post-procesamiento</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
-    
-with col_disc3:
-    st.markdown("""
-    <div class="glass-card" style="background: #ffffff; padding: 2rem; border-radius: 14px; border-top: 4px solid #ff9500; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); height: 100%;">
-        <h3 style="font-size: 1.5rem; font-weight: 700; color: #000000 !important; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
-            3. 🔄 MLOps & DevOps
-        </h3>
-        <ul style="color: #000000 !important; line-height: 1.9; font-size: 1.05rem; margin: 0; padding-left: 1.2rem;">
-            <li style="margin-bottom: 1rem;">Orquestación con <strong style="color: #000000 !important;">Apache Airflow</strong> (3 DAGs coordinados)</li>
-            <li style="margin-bottom: 1rem;">Containerización con <strong style="color: #000000 !important;">Docker Compose</strong> (4 servicios)</li>
-            <li style="margin-bottom: 1rem;">CI/CD con <strong style="color: #000000 !important;">GitHub Actions</strong> y validación automática de modelos</li>
-            <li style="margin-bottom: 0;">Monitoreo <strong style="color: #000000 !important;">semanal</strong> de drift con reentrenamiento automático</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
+st.markdown("""
+<div style="text-align: center; margin: 4rem 0 3rem 0;">
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("---")
 
-# Arquitectura de la Solución
-st.markdown("""
-<div style="margin: 3rem 0;">
-    <h2 style="font-size: 2.5rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem; letter-spacing: -0.02em;">
-        🏗️ Arquitectura de la Solución
-    </h2>
-</div>
-""", unsafe_allow_html=True)
-    
-
 ##################
 
-
     
-# Content en glass cards mejorado
-col1, col2 = st.columns([1, 1.2], gap="large")
 
-with col1:
-    st.markdown("""
-    <div class="glass-card" style="height: 100%;">
-        <h2 style="font-size: 1.8rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
-            🔴 Problema de Negocio
-        </h2>
-        <p style="font-size: 1.1rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 1.5rem;">
-            Una empresa textil procesaba <strong>manualmente más de 100 facturas mensuales</strong>, 
-            invirtiendo <strong>16 horas/mes</strong> de trabajo repetitivo.
+# Card: Problema de Negocio
+st.markdown("""
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h2 style="font-size: 1.8rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
+        🔴 Problema de Negocio
+    </h2>
+    <p style="font-size: 1.1rem; color: #1d1d1f; line-height: 1.8;">
+        Las empresas textiles procesan cientos de facturas diarias que deben clasificarse manualmente en dos categorías críticas: correctivas (ajustes/correcciones de pedidos) y preventivas (operaciones estándar). Este proceso manual requiere que personal administrativo revise cada factura, identifique características específicas, clasifique según criterios complejos, y extraiga datos manualmente para ingresarlos en sistemas. El resultado es un proceso que toma 2-3 minutos por factura, con tasa de error del ~15%, que no escala cuando aumenta el volumen, genera cuellos de botella durante horas laborales, y produce inconsistencias por diferentes interpretaciones del personal. Además, la información queda dispersa entre sistemas y la extracción de insights de negocio es lenta y costosa.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+# Card: Solución Implementada
+st.markdown("""
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h2 style="font-size: 1.8rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
+        ✅ Solución Implementada
+    </h2>
+    <p style="font-size: 1.1rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 1.5rem;">
+        Sistema ETL automatizado con inteligencia artificial que procesa el ciclo completo: descarga automática de facturas desde S3, clasificación mediante modelo CNN con >90% de precisión (superando el ~85% humano), extracción de datos estructurados con OCR (orden de compra, productos, cantidades, totales), almacenamiento en base de datos relacional, y distribución automática a Google Drive en carpetas organizadas por tipo. El sistema opera 24/7 orquestado por Airflow, ejecutándose cada hora sin intervención humana, con capacidad de escalar automáticamente de 10 a 10,000 facturas mediante arquitectura serverless en AWS, y se auto-optimiza mediante detección semanal de drift que dispara reentrenamiento del modelo cuando los patrones de datos cambian.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <hr style="border: none; height: 1px; background: rgba(0, 0, 0, 0.1); margin: 2rem 0;" />
+    <h3 style="font-size: 1.5rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
+        💎 Valor para la Empresa
+    </h3>
+    <div style="margin-bottom: 2rem;">
+        <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
+            Eficiencia Operacional:
+        </h4>
+        <p style="font-size: 1.05rem; color: #000000 !important; font-weight: 400; line-height: 1.8; margin: 0.5rem 0;">
+            * 95% reducción en tiempo de procesamiento (de horas a segundos por factura)<br/>
+            * Eliminación de cuellos de botella con procesamiento continuo 24/7/365<br/>
+            * Capacidad ilimitada de escalar sin contratar personal adicional<br/>
+            * Reducción de errores del 15% (humano) a &lt;10% (automatizado)
         </p>
-        <div style="background: rgba(255, 59, 48, 0.1); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ff3b30;">
-            <p style="font-size: 1rem; color: #1d1d1f; margin: 0.5rem 0; line-height: 1.7;">
-                <strong>•</strong> Clasificación manual entre mantenimientos preventivos y correctivos<br/>
-                <strong>•</strong> Extracción manual de datos (números de orden, fechas, productos, montos)<br/>
-                <strong>•</strong> Digitación en bases de datos con alta probabilidad de error humano<br/>
-                <strong>•</strong> Retrasos de días en disponibilidad de datos para análisis financiero
-            </p>
-        </div>
     </div>
-    """, unsafe_allow_html=True)
-    
-with col2:
-        st.markdown("""
-    <div class="glass-card" style="height: 100%; background: #ffffff; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-        <h2 style="font-size: 1.9rem; font-weight: 700; color: #000000 !important; margin-bottom: 1.5rem; letter-spacing: -0.02em; line-height: 1.3;">
-            ✅ Solución Implementada
-        </h2>
-        <p style="font-size: 1.15rem; color: #000000 !important; line-height: 1.8; margin-bottom: 2rem; font-weight: 400;">
-            Sistema MLOps <strong style="color: #000000 !important; font-weight: 700;">end-to-end</strong> que elimina completamente la intervención humana 
-            con una precisión del <strong style="color: #34c759 !important; font-weight: 700; font-size: 1.2em;">95%</strong> 
-            <span style="color: #333333 !important;">(superior al humano promedio de 85%)</span>.
+    <div style="margin-bottom: 2rem;">
+        <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
+            Impacto Financiero:
+        </h4>
+        <p style="font-size: 1.05rem; color: #000000 !important; font-weight: 400; line-height: 1.8; margin: 0.5rem 0;">
+            * Reducción de costos operacionales al eliminar horas-hombre de trabajo manual repetitivo<br/>
+            * Liberación de talento humano para tareas de mayor valor (análisis, estrategia)<br/>
+            * Faster time-to-insight con datos estructurados disponibles en tiempo real<br/>
+            * Modelo pay-per-use que solo cobra por facturas procesadas (no costos fijos)
         </p>
-        <div style="background: linear-gradient(135deg, rgba(52, 199, 89, 0.12) 0%, rgba(52, 199, 89, 0.06) 100%); padding: 2rem; border-radius: 14px; border-left: 5px solid #34c759; box-shadow: 0 2px 12px rgba(52, 199, 89, 0.15);">
-            <h3 style="font-size: 1.25rem; font-weight: 700; color: #000000 !important; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
-                🚀 ¿Cómo funciona?
-            </h3>
-            <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 0, 0, 0.08);">
-                <p style="font-size: 1.05rem; color: #000000 !important; margin: 0; line-height: 1.8;">
-                    <strong style="color: #000000 !important; font-weight: 700; font-size: 1.1rem;">1. Extracción Automática</strong> 
-                    <span style="color: #666666 !important; font-weight: 500;">(cada hora)</span><br/>
-                    <span style="color: #333333 !important; font-size: 1rem; display: block; margin-top: 0.5rem; padding-left: 0.5rem; border-left: 2px solid #34c759;">
-                        Descarga facturas nuevas desde AWS S3 sin intervención humana.
-                    </span>
-                </p>
-            </div>
-            <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 0, 0, 0.08);">
-                <p style="font-size: 1.05rem; color: #000000 !important; margin: 0; line-height: 1.8;">
-                    <strong style="color: #000000 !important; font-weight: 700; font-size: 1.1rem;">2. Clasificación Inteligente con IA</strong><br/>
-                    <span style="color: #333333 !important; font-size: 1rem; display: block; margin-top: 0.5rem; padding-left: 0.5rem; border-left: 2px solid #34c759;">
-                        Red neuronal CNN (TensorFlow) clasifica automáticamente en Preventivas o Correctivas.
-                    </span>
-                </p>
-            </div>
-            <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 0, 0, 0.08);">
-                <p style="font-size: 1.05rem; color: #000000 !important; margin: 0; line-height: 1.8;">
-                    <strong style="color: #000000 !important; font-weight: 700; font-size: 1.1rem;">3. Extracción de Datos con OCR</strong><br/>
-                    <span style="color: #333333 !important; font-size: 1rem; display: block; margin-top: 0.5rem; padding-left: 0.5rem; border-left: 2px solid #34c759;">
-                        Tesseract OCR extrae automáticamente números de orden, fechas, productos, cantidades y totales.
-                    </span>
-                </p>
-            </div>
-            <div style="margin-bottom: 0;">
-                <p style="font-size: 1.05rem; color: #000000 !important; margin: 0; line-height: 1.8;">
-                    <strong style="color: #000000 !important; font-weight: 700; font-size: 1.1rem;">4. Carga</strong><br/>
-                    <span style="color: #333333 !important; font-size: 1rem; display: block; margin-top: 0.5rem; padding-left: 0.5rem; border-left: 2px solid #34c759;">
-                        Datos estructurados se insertan en MySQL (AWS RDS) y se archivan en Google Drive.
-                    </span>
-                </p>
-            </div>
-        </div>
-        </div>
-        """, unsafe_allow_html=True)
+    </div>
+    <div style="margin-bottom: 0;">
+        <h4 style="font-size: 1.2rem; font-weight: 700; color: #000000 !important; margin-bottom: 1rem;">
+            Ventajas Competitivas:
+        </h4>
+        <p style="font-size: 1.05rem; color: #000000 !important; font-weight: 400; line-height: 1.8; margin: 0.5rem 0;">
+            * Datos estructurados para análisis de negocio y toma de decisiones<br/>
+            * Mejora continua automática del modelo sin intervención manual<br/>
+            * Trazabilidad completa de cada factura procesada con logs y métricas<br/>
+            * Escalabilidad probada para manejar crecimiento del negocio sin re-arquitectura
+        </p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
 # Tres columnas para las disciplinas
 
 tab1, tab2, tab3, tab4 = st.tabs([
-    "🏗️ Arquitectura & Orquestación",
+    "🏗️ Arquitectura & Stack Tecnológico",
     "</> Ver Software",
     "🧠 Pipeline de entrenamiento",
     "🦾 Orquestación con Apache Airflow",  
 ])
 
 with tab1:
+    # Mostrar imagen de arquitectura
+    st.image("image_arquitecture.png", use_container_width=True)
+    
+    # Título Stack Tecnológico
     st.markdown("""
-    <div style="margin: 2rem 0;">
-        <h2 style="font-size: 2.5rem; font-weight: 700; color: #1d1d1f; margin-bottom: 0.5rem; letter-spacing: -0.02em;">
-            🏗️ Arquitectura & Orquestación
+    <div style="margin: 2rem 0; text-align: center;">
+        <h2 style="font-size: 2.5rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1rem; letter-spacing: -0.02em;">
+            Stack Tecnológico
         </h2>
-        <p style="font-size: 1.2rem; color: #86868b; margin-bottom: 2rem;">
-            Sistema completo de contenedores, orquestación y CI/CD
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Contenido Stack Tecnológico
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Python 3.11
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Lenguaje líder en Data Science, ML, y backend moderno. Ecosistema masivo de librerías (TensorFlow, pandas, scikit-learn, FastAPI) sin equivalente en otros lenguajes. Python 3.11 ofrece 10-60% mejora de performance vs 3.10 gracias a optimizaciones del bytecode compiler y faster startup. Type hints nativos mejoran maintainability en proyectos grandes.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Lenguaje base para TODO el proyecto: API FastAPI, scripts ETL, training pipelines, DAGs de Airflow, utilidades de procesamiento. Permite prototipado rápido y transition seamless entre data science (notebooks) y production code (módulos). Uso de virtual environments (venv) para aislamiento de dependencias.
         </p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Cards mejoradas para cada componente
-    col_arch1, col_arch2 = st.columns(2, gap="large")
-    
-    with col_arch1:
-        st.markdown("""
-        <div class="glass-card">
-            <h3 style="font-size: 1.5rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1rem;">
-                🐳 Containerización
-            </h3>
-            <ul style="color: #1d1d1f; line-height: 1.8; font-size: 1rem;">
-                <li>Docker multi-stage builds</li>
-                <li>Docker Compose con 4 servicios: API, Airflow, MLflow, MySQL</li>
-                <li>Health checks y restart policies</li>
-            </ul>
-      
-        </div>
-        """, unsafe_allow_html=True)
-        
+    # FastAPI 0.104
     st.markdown("""
-        <div class="glass-card">
-            <h3 style="font-size: 1.5rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1rem;">
-                📅 Orquestación
-            </h3>
-            <ul style="color: #1d1d1f; line-height: 1.8; font-size: 1rem;">
-                <li>Apache Airflow: 3 DAGs (ETL, Training, Drift Detection)</li>
-                <li>Cron scheduling, HTTP sensors, error handling</li>
-                <li>Slack notifications para alertas</li>
-            </ul>
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            FastAPI 0.104
+        </h3>
     </div>
     """, unsafe_allow_html=True)
     
-    with col_arch2:
-        st.markdown("""
-        <div class="glass-card">
-            <h3 style="font-size: 1.5rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1rem;">
-                🔌 API REST
-            </h3>
-            <ul style="color: #1d1d1f; line-height: 1.8; font-size: 1rem;">
-                <li>FastAPI con endpoints asíncronos</li>
-                <li>Background tasks para long-running operations</li>
-                <li>Status tracking en tiempo real</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
     st.markdown("""
-        <div class="glass-card">
-            <h3 style="font-size: 1.5rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1rem;">
-                🧪 Testing & CI/CD
-            </h3>
-            <ul style="color: #1d1d1f; line-height: 1.8; font-size: 1rem;">
-                <li>GitHub Actions: 2 workflows (tests + CI validation)</li>
-                <li>Unit tests, Integration tests</li>
-                <li>Quality gates: F1 > 0.85, Accuracy > Baseline</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Framework web async moderno construido sobre Starlette y Pydantic. Performance comparable a Node.js y Go gracias a async/await nativo. Auto-generación de documentación OpenAPI/Swagger sin código adicional. Validación automática de requests via Pydantic schemas reduce bugs. Comparado con Flask (sync) o Django (monolítico), FastAPI es ideal para microservicios de alta concurrencia.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Backbone de la API REST que expone endpoints: POST /predict (clasificación de facturas), GET /metrics (estadísticas), POST /upload (carga manual), /health y /ready (health checks ALB). Maneja autenticación JWT, rate limiting (100 req/min), CORS para frontend, y serialización JSON automática. Uvicorn ASGI server con 4 workers procesa ~500 requests/sec.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    st.markdown("---")
+    # Cloud & Infraestructura AWS
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1rem 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.02em;">
+            Cloud & Infraestructura AWS
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Terraform 1.6+
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 0 2rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; background: #1d1d1f; padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem; display: inline-block;">
+            Terraform 1.6+
+        </h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0.8rem;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Justificación:</strong> Herramienta IaC (Infrastructure as Code) líder que permite definir infraestructura como código declarativo. Multi-cloud por diseño (vs CloudFormation solo AWS). State management permite detectar drift entre código y realidad. Plan/apply workflow previene cambios destructivos accidentales. Módulos reutilizables y outputs facilitan composición.
+        </p>
+        <p style="font-size: 1.05rem; color: #1d1d1f; line-height: 1.8; margin-bottom: 0;">
+            <strong style="font-weight: 800; color: #ffffff; background: #000000; padding: 0.3rem 0.6rem; border-radius: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block; margin-right: 0.5rem;">Rol en el proyecto:</strong> Define y aprovisiona 75+ recursos AWS en 2,317 líneas de código HCL: VPC, subnets, security groups, ECS cluster, task definitions, ALB + target groups, RDS instance, S3 buckets con policies, MWAA environment, IAM roles/policies, CloudWatch alarms. Organizado en módulos: networking/, compute/, storage/, security/. Comandos: terraform plan, apply, destroy.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 with tab2:
     # Título y botón de GitHub
