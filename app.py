@@ -603,7 +603,7 @@ st.markdown("""
         ¿Qué es este proyecto?
     </h2>
     <p style="font-size: 1.1rem; color: #1d1d1f; font-weight: 400; margin-bottom: 0.4rem; line-height: 1.4;">
-        Este proyecto es un sistema ETL empresarial que automatiza end-to-end el procesamiento y clasificación de facturas textiles mediante inteligencia artificial. El flujo comienza extrayendo facturas en PDF desde AWS S3, las procesa con un modelo CNN custom que clasifica cada factura como correctiva o preventiva con más del 90% de precisión, aplica OCR (Tesseract) para extraer información estructurada (números de orden, productos, cantidades, totales), y almacena los datos en MySQL (AWS RDS) según su clasificación. Las facturas procesadas se suben automáticamente a Google Drive mediante su API OAuth 2.0 en tres ubicaciones: carpeta "histórico" (todas), "correctivos" (clase 0), y "preventivos" (clase 1), finalizando con la limpieza automática de archivos temporales y eliminación de facturas ya procesadas del bucket S3.<br/><br/>Todo el pipeline está orquestado con Apache Airflow en Amazon MWAA ejecutándose cada hora, gestionando además pipelines de entrenamiento del modelo bajo demanda, detección semanal de data drift mediante tests estadísticos que disparan reentrenamiento automático, y tracking de experimentos con MLflow y versionado de modelos con DVC. La arquitectura completa está desplegada sobre servicios serverless de AWS (ECS Fargate, ALB, CloudWatch, Secrets Manager) con auto-scaling automático de 2 a 10 tasks según demanda, y toda la infraestructura de 75+ recursos está definida mediante Infrastructure as Code con Terraform (2,300+ líneas), permitiendo deployment reproducible, versionado en Git, y CI/CD completo con GitHub Actions que ejecuta tests, valida calidad del modelo (F1 > 0.85), construye imágenes Docker, las publica en ECR, y despliega actualizaciones sin downtime.
+        Este proyecto es un sistema ETL empresarial que automatiza end-to-end el procesamiento y clasificación de facturas para una empresa del sector textil mediante inteligencia artificial. El flujo comienza extrayendo facturas en PDF desde AWS S3, las procesa con un modelo CNN custom que clasifica cada factura como correctiva o preventiva con más del 90% de precisión, aplica OCR (Tesseract) para extraer información estructurada (números de orden, productos, cantidades, totales), y almacena los datos en MySQL (AWS RDS) según su clasificación. Las facturas procesadas se suben automáticamente a Google Drive mediante su API OAuth 2.0 en tres ubicaciones: carpeta "histórico" (todas), "correctivos" (clase 0), y "preventivos" (clase 1), finalizando con la limpieza automática de archivos temporales y eliminación de facturas ya procesadas del bucket S3.<br/><br/>Todo el pipeline está orquestado con Apache Airflow en Amazon MWAA ejecutándose cada hora, gestionando además pipelines de entrenamiento del modelo bajo demanda, detección semanal de data drift mediante tests estadísticos que disparan reentrenamiento automático, y tracking de experimentos con MLflow y versionado de modelos con DVC. La arquitectura completa está desplegada sobre servicios serverless de AWS (ECS Fargate, ALB, CloudWatch, Secrets Manager) con auto-scaling automático de 2 a 10 tasks según demanda, y toda la infraestructura de 75+ recursos está definida mediante Infrastructure as Code con Terraform (2,300+ líneas), permitiendo deployment reproducible, versionado en Git, y CI/CD completo con GitHub Actions que ejecuta tests, valida calidad del modelo (F1 > 0.85), construye imágenes Docker, las publica en ECR, y despliega actualizaciones sin downtime.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -688,6 +688,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("""
+<style>
+    #costos-section h5,
+    #costos-section strong,
+    #costos-section p,
+    #costos-section h3 {
+        color: #000000 !important;
+    }
+</style>
 <div class="glass-card" style="margin-bottom: 2rem;">
     <hr style="border: none; height: 1px; background: rgba(0, 0, 0, 0.1); margin: 2rem 0;" />
     <h3 style="font-size: 1.5rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
@@ -729,22 +737,23 @@ st.markdown("""
                 </p>
             </div>
         </div>
-        <div style="flex: 1; min-width: 300px;">
-            <h3 style="font-size: 1.5rem; font-weight: 600; color: #1d1d1f; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
+        <div style="width: 1px; background-color: #000000; margin: 0 1rem; align-self: stretch;"></div>
+        <div id="costos-section" style="flex: 1; min-width: 300px; color: #000000 !important;">
+            <h3 style="font-size: 1.5rem; font-weight: 600; color: #000000 !important; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
                 💰 Estrategia de Recursos y Optimización de Costos
             </h3>
             <h5 style="font-size: 0.95rem; font-weight: 700; color: #000000 !important; margin-top: 1rem; margin-bottom: 0.5rem;">
                 Dimensionamiento Diferenciado por Workload
             </h5>
             <p style="font-size: 0.9rem; color: #000000 !important; font-weight: 400; line-height: 1.5; margin: 0.3rem 0;">
-                <strong>Pipeline ETL (ejecución horaria - 24x/día):</strong><br/>
+                <strong style="color: #000000 !important; font-weight: 700;">Pipeline ETL (ejecución horaria - 24x/día):</strong><br/>
                 - ECS Fargate: 1 vCPU, 2GB RAM<br/>
                 - Justificación: Workload I/O bound (descarga S3, llamadas a APIs), CPU mínimo suficiente<br/>
                 - Duración promedio: 8-12 minutos por ejecución<br/>
                 - Costo mensual estimado: ~$25-30 USD (730 horas × $0.04048/hora)
             </p>
             <p style="font-size: 0.9rem; color: #000000 !important; font-weight: 400; line-height: 1.5; margin: 0.3rem 0;">
-                <strong>Pipeline Training (on-demand - 2-4x/mes):</strong><br/>
+                <strong style="color: #000000 !important; font-weight: 700;">Pipeline Training (on-demand - 2-4x/mes):</strong><br/>
                 - ECS Fargate: 8 vCPU, 32GB RAM<br/>
                 - Justificación: Workload CPU/memory intensive (operaciones matriciales de TensorFlow, data augmentation paralelo)<br/>
                 - Impacto: Reduce entrenamiento de ~3h a ~45min (4x más rápido)<br/>
@@ -755,32 +764,29 @@ st.markdown("""
                 Optimizaciones de Costos Implementadas
             </h5>
             <p style="font-size: 0.9rem; color: #000000 !important; font-weight: 400; line-height: 1.5; margin: 0.3rem 0;">
-                <strong>Storage:</strong><br/>
+                <strong style="color: #000000 !important;">Storage:</strong><br/>
                 - S3 Lifecycle Policy: Archivos procesados eliminados automáticamente después de subir a Drive (ahorro ~$0.023/GB/mes)<br/>
                 - DVC Remote: Modelos viejos archivados a S3 Glacier después de 90 días (reducción 80% en costos de storage)
             </p>
             <p style="font-size: 0.9rem; color: #000000 !important; font-weight: 400; line-height: 1.5; margin: 0.3rem 0;">
-                <strong>Compute:</strong><br/>
+                <strong style="color: #000000 !important;">Compute:</strong><br/>
                 - Fargate Spot (considerado para training): Ahorro potencial de 50-70% en entrenamientos, tolerante a interrupciones<br/>
                 - Auto-scaling deshabilitado en MWAA: 2 workers máximo, suficiente para carga actual (evita scaling innecesario)
             </p>
             <p style="font-size: 0.9rem; color: #000000 !important; font-weight: 400; line-height: 1.5; margin: 0.3rem 0;">
-                <strong>Database:</strong><br/>
+                <strong style="color: #000000 !important;">Database:</strong><br/>
                 - RDS MySQL db.t3.micro: Instancia burstable adecuada para carga transaccional baja (~100 inserts/hora)
             </p>
             <h5 style="font-size: 0.95rem; font-weight: 700; color: #000000 !important; margin-top: 1rem; margin-bottom: 0.5rem;">
                 Impacto en Facturación Total
             </h5>
             <p style="font-size: 0.9rem; color: #000000 !important; font-weight: 400; line-height: 1.5; margin: 0.3rem 0;">
-                <strong>Costos mensuales aproximados:</strong><br/>
+                <strong style="color: #000000 !important;">Costos mensuales aproximados:</strong><br/>
                 - MWAA (mw1.small): ~$310 USD<br/>
                 - ECS Fargate (ETL + Training): ~$35 USD<br/>
                 - RDS MySQL (db.t3.micro): ~$15 USD<br/>
                 - S3 + Transfer: ~$10 USD<br/>
                 - Total: ~$370 USD/mes
-            </p>
-            <p style="font-size: 0.9rem; color: #000000 !important; font-weight: 400; line-height: 1.5; margin: 0.3rem 0;">
-                <strong>ROI:</strong> Automatización elimina ~80 horas/mes de procesamiento manual, equivalente a ~$2,400 USD en costos laborales, resultando en ahorro neto de ~$2,030 USD/mes.
             </p>
         </div>
     </div>
@@ -1662,10 +1668,10 @@ with tab2:
         st.markdown("""
         <div style="margin: 2rem 0 1rem 0; text-align: right;">
             <a href="https://github.com/giovany-desing/etl_facturas_textil" target="_blank" style="text-decoration: none;">
-                <button style="background: linear-gradient(135deg, #24292e 0%, #1a1e22 100%); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: inline-flex; align-items: center; gap: 0.5rem;">
-                    <span style="font-size: 1.2rem;">🐙</span>
+                <button style="background: linear-gradient(135deg, #0071e3 0%, #0051a3 100%); color: white; border: none; padding: 1.2rem 3rem; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 113, 227, 0.4); display: inline-flex; align-items: center; gap: 0.8rem; transition: all 0.3s ease; transform: translateY(0);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 32px rgba(0, 113, 227, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 24px rgba(0, 113, 227, 0.4)';">
+                    <span style="font-size: 1.5rem;">🐙</span>
                     <span>Ver Codigo en GitHub</span>
-                    <span style="font-size: 0.9rem;">↗</span>
+                    <span style="font-size: 1.1rem;">↗</span>
                 </button>
             </a>
     </div>
@@ -1683,150 +1689,785 @@ with tab2:
     """, unsafe_allow_html=True)
     
     st.code("""
-etl_facturas_textil/
+⏺ Mapa de Distribución de Archivos del Proyecto
+
+  etl_facturas_textil/
   │
-  ├── 📄 .env                                    # Configuración: Variables de entorno (AWS, MySQL, credenciales)
-  ├── 📄 .env.example                            # Template: Ejemplo de variables para configuración inicial
-  ├── 📄 .gitignore                              # Git: Archivos/carpetas excluidos del versionado
-  ├── 📄 .dockerignore                           # Docker: Archivos excluidos al construir imágenes
-  ├── 📄 requirements.txt                        # Dependencias: Lista de paquetes Python del proyecto
-  ├── 📄 credentials.json                        # OAuth: Credenciales de Google Drive API
-  ├── 📄 token.json                              # OAuth: Token de acceso Google Drive (auto-renovado)
-  │
-  ├── 📁 .git/                                   # Git: Historial de versiones del código fuente
-  │
-  ├── 📁 .github/                                # CI/CD: Workflows de automatización
+  ├── .github/
   │   ├── workflows/
-  │   │   ├── 📄 tests.yml                      # CI/CD: Ejecuta pytest en cada push/PR
-  │   │   └── 📄 ci-validation.yml              # CI/CD: Valida métricas de modelos (gate de calidad)
-  │   └── 📄 README.md                           # Docs: Documentación de workflows CI/CD
+  │   │   ├── build-and-push-ecr.yml          # CI: Build imagen Docker y push a ECR
+  │   │   ├── ci-validation.yml               # CI: Validación de código y tests
+  │   │   ├── deploy-to-aws.yml               # CD: Deploy automático a AWS
+  │   │   ├── integration-tests-aws.yml       # CI: Tests de integración contra AWS
+  │   │   ├── terraform-apply.yml             # CD: Aplicar cambios de infraestructura
+  │   │   ├── terraform-plan.yml              # CI: Preview de cambios Terraform
+  │   │   └── tests.yml                       # CI: Suite de tests unitarios
+  │   │
+  │   └── PROJECT_SHOWCASE.md                 # Documentación del proyecto para portfolio
   │
-  ├── 📁 .dvc/                                   # DVC: Sistema de versionado de datos/modelos
-  │   ├── 📄 config                             # DVC: Configuración de remote S3 storage
-  │   ├── 📄 .gitignore                         # DVC: Ignora cache y archivos temporales
-  │   ├── 📄 last_push_hash.txt                 # DVC: Tracking del último push exitoso
-  │   ├── 📁 cache/                             # DVC: Cache local de archivos grandes (modelos, datos)
-  │   │   └── files/md5/                        # DVC: Content-addressable storage por hash MD5
-  │   │       ├── 3d/6e089549...                # DVC: Modelo modelo_facturas_final.h5 (255 MB)
-  │   │       ├── 85/8d3c8a2d...dir             # DVC: Metadata de invoices_train/ (319 PDFs)
-  │   │       └── 41/cb2a0062...dir             # DVC: Metadata de invoices_test/ (40 PDFs)
-  │   └── 📁 tmp/                               # DVC: Archivos temporales de operaciones
+  ├── airflow/
+  │   └── dags/
+  │       ├── config/
+  │       │   ├── __init__.py                 # Inicialización del módulo config
+  │       │   └── aws_connections.py          # Configuración de conexiones AWS para DAGs
+  │       │
+  │       ├── drift_production.py             # DAG: Detección de drift del modelo (semanal)
+  │       ├── etl_production.py               # DAG: Pipeline ETL principal (horario)
+  │       └── train_production.py             # DAG: Entrenamiento del modelo (on-demand)
   │
-  ├── 📁 app/                                    # Core: Código fuente principal de la aplicación
+  ├── app/
+  │   ├── aws_integration/
+  │   │   ├── __init__.py                     # Inicialización módulo AWS
+  │   │   ├── cloudwatch_logger.py            # Cliente para envío de logs/métricas a CloudWatch
+  │   │   ├── ecs_client.py                   # Cliente para lanzar tasks ECS Fargate
+  │   │   └── secrets_manager.py              # Cliente para obtener secrets de Secrets Manager
   │   │
-  │   ├── 📄 __init__.py                        # Python: Marca carpeta como paquete Python
-  │   ├── 📄 main.py                            # API: FastAPI - Endpoints REST (procesar_facturas, train_model)
-  │   ├── 📄 config.py                          # Config: Pydantic Settings - Configuración centralizada
-  │   ├── 📄 utils.py                           # Utils: Logger configurado y funciones auxiliares
-  │   │
-  │   ├── 📄 model.py                           # ML: Entrenamiento CNN - Arquitectura, callbacks, métricas
-  │   ├── 📄 predict.py                         # ML: Inferencia - Clasificación de facturas con modelo cargado
-  │   ├── 📄 preprocessing.py                   # ML: Preprocesamiento - Load imágenes, resize, normalización
-  │   ├── 📄 drift_analyzer.py                  # MLOps: Detección de drift - KS-test estadístico
-  │   │
-  │   ├── 📄 ocr.py                             # ETL: Extracción OCR - Tesseract + Regex parsing
-  │   ├── 📄 database.py                        # ETL: Capa de BD - SQLAlchemy ORM, modelos, funciones CRUD
-  │   ├── 📄 drive.py                           # ETL: Google Drive - OAuth2, upload/download de facturas
-  │   ├── 📄 s3_utils.py                        # ETL: AWS S3 - Boto3 para descarga/eliminación de archivos
-  │   │
-  │   └── 📁 tests/                             # Testing: (Si existiera subcarpeta en app/)
+  │   ├── __init__.py                         # Inicialización aplicación FastAPI
+  │   ├── config.py                           # Configuración general (settings, paths)
+  │   ├── config_aws.py                       # Configuración específica de AWS
+  │   ├── database.py                         # Conexión MySQL y operaciones CRUD
+  │   ├── drift_analyzer.py                   # Análisis estadístico de drift (Kolmogorov-Smirnov)
+  │   ├── drive.py                            # Integración con Google Drive API
+  │   ├── health.py                           # Endpoints health check para ALB
+  │   ├── main.py                             # API FastAPI: endpoints ETL y training
+  │   ├── model.py                            # Script de entrenamiento CNN
+  │   ├── ocr.py                              # Extracción de texto con Tesseract OCR
+  │   ├── predict.py                          # Inferencia con modelo CNN
+  │   ├── preprocessing.py                    # Preprocesamiento de imágenes para ML
+  │   ├── s3_utils.py                         # Operaciones S3 (upload/download/delete)
+  │   └── utils.py                            # Utilidades generales (logger, helpers)
   │
-  ├── 📁 airflow/                                # Orquestación: Apache Airflow workflows
+  ├── aws/
+  │   ├── ecs/
+  │   │   ├── auto-scaling/
+  │   │   │   └── fastapi-scaling.json        # Configuración auto-scaling para FastAPI
+  │   │   │
+  │   │   ├── service-definitions/
+  │   │   │   ├── fastapi-service.json        # Definición ECS Service FastAPI
+  │   │   │   └── mlflow-service.json         # Definición ECS Service MLflow
+  │   │   │
+  │   │   └── task-definitions/
+  │   │       ├── fastapi-service.json        # Task Definition FastAPI (1vCPU, 2GB)
+  │   │       ├── mlflow-server.json          # Task Definition MLflow Server
+  │   │       └── model-training.json         # Task Definition entrenamiento (8vCPU, 32GB)
   │   │
-  │   ├── 📁 dags/                              # Airflow: Definición de DAGs (Directed Acyclic Graphs)
-  │   │   ├── 📄 etl_dag.py                     # Airflow: ETL horario - Procesa facturas cada hora
-  │   │   ├── 📄 train_dag.py                   # Airflow: Training pipeline - CI/CD de modelos ML
-  │   │   └── 📄 drift_dag.py                   # Airflow: Drift detection semanal - Trigger reentrenamiento
+  │   ├── iam/
+  │   │   └── policies/
+  │   │       ├── ecs-task-execution-role.json  # Permisos para ECS ejecutar tasks
+  │   │       ├── ecs-task-role.json            # Permisos FastAPI (S3, Secrets, CloudWatch)
+  │   │       ├── ecs-task-role-training.json   # Permisos training (S3, DVC, CloudWatch)
+  │   │       └── mwaa-execution-role.json      # Permisos MWAA (ECS, S3, Secrets)
   │   │
-  │   ├── 📁 plugins/                           # Airflow: Plugins personalizados (si existieran)
-  │   ├── 📁 logs/                              # Airflow: Logs de ejecución de DAGs
-  │   └── 📄 airflow.cfg                        # Airflow: Configuración del servidor (si existe)
+  │   └── mwaa/
+  │       └── requirements.txt                # Dependencias Python para MWAA
   │
-  ├── 📁 docker/                                 # Infraestructura: Containerización
-  │   │
-  │   ├── 📄 Dockerfile                         # Docker: Imagen de la API FastAPI (Python 3.11 + deps)
-  │   ├── 📄 docker-compose.airflow.yml         # Docker Compose: Orquestación 4 servicios (API, Airflow, MLflow, MySQL)
-  │   ├── 📄 .dockerignore                      # Docker: Archivos excluidos de la imagen
-  │   └── 📁 nginx/                             # Nginx: Reverse proxy y SSL (si existiera)
+  ├── config/
+  │   └── aws/
+  │       ├── dev-config.yaml                 # Configuración ambiente desarrollo
+  │       └── production-config.yaml          # Configuración ambiente producción
   │
-  ├── 📁 data/                                   # Datos: Datasets de entrenamiento/test
-  │   │
-  │   ├── 📄 invoices_train.dvc                 # DVC: Puntero a 319 PDFs de entrenamiento en S3
-  │   ├── 📄 invoices_test.dvc                  # DVC: Puntero a 40 PDFs de prueba en S3
-  │   │
-  │   ├── 📁 invoices_train/                    # Datos: 319 facturas para entrenamiento (versionado DVC)
-  │   │   ├── 0/                                # Datos: Clase 0 (Preventivas)
-  │   │   │   ├── factura001.pdf
-  │   │   │   ├── factura002.pdf
-  │   │   │   └── ...
-  │   │   └── 1/                                # Datos: Clase 1 (Correctivas)
-  │   │       ├── Invoicef0900.pdf
-  │   │       └── ...
-  │   │
-  │   ├── 📁 invoices_test/                     # Datos: 40 facturas para testing (versionado DVC)
-  │   │   ├── 0/
-  │   │   └── 1/
-  │   │
-  │   ├── 📁 raw/                               # Datos: Datos crudos sin procesar (ignorado por Git)
-  │   ├── 📁 processed/                         # Datos: Datos procesados intermedios (ignorado por Git)
-  │   └── 📁 train_data/                        # Datos: Arrays NumPy preprocesados (ignorado por Git)
-  │       ├── facturas_X_entrenamiento.npy      # Datos: Features de entrenamiento (generado por preprocessing.py)
-  │       ├── facturas_y_entrenamiento.npy      # Datos: Labels de entrenamiento
-  │       ├── facturas_X_prueba.npy             # Datos: Features de test
-  │       ├── facturas_y_prueba.npy             # Datos: Labels de test
-  │       └── facturas_mapeo_etiquetas.npy      # Datos: Mapeo de clases {'0': 0, '1': 1}
+  ├── data/
+  │   ├── invoices_test.dvc                   # DVC pointer a dataset de test en S3
+  │   └── invoices_train.dvc                  # DVC pointer a dataset de train en S3
   │
-  ├── 📁 modelos/                                # ML: Modelos entrenados y artefactos
-  │   │
-  │   ├── 📄 .gitignore                         # Git: Ignora archivos .h5 grandes (versionados con DVC)
-  │   │
-  │   ├── 📄 modelo_facturas_final.h5           # ML: Modelo CNN entrenado (255 MB, versionado DVC)
-  │   ├── 📄 modelo_facturas_final.h5.dvc       # DVC: Puntero al modelo en S3 (versionado en Git)
-  │   │
-  │   ├── 📄 historial_entrenamiento.npy        # ML: Historial de métricas por época (versionado DVC)
-  │   ├── 📄 historial_entrenamiento.npy.dvc    # DVC: Puntero al historial en S3
-  │   │
-  │   ├── 📄 mapeo_etiquetas.npy                # ML: Mapeo de clases (versionado DVC)
-  │   ├── 📄 mapeo_etiquetas.npy.dvc            # DVC: Puntero al mapeo en S3
-  │   │
-  │   ├── 📄 baseline_caracteristicas.npy       # MLOps: Baseline para drift detection (features de referencia)
-  │   │
-  │   └── 📄 metricas_entrenamiento.png         # ML: Gráficas de accuracy, loss, precision, recall
+  ├── docker/
+  │   ├── Dockerfile                          # Imagen Docker para FastAPI y training
+  │   ├── docker-compose.airflow.yml          # Compose para Airflow local
+  │   └── docker-compose.aws-local.yml        # Compose para simular AWS localmente
   │
-  ├── 📁 tests/                                  # Testing: Suite de pruebas automatizadas
+  ├── docs/
+  │   ├── architecture/
+  │   │   └── architecture.md                 # Documentación arquitectura del sistema
   │   │
-  │   ├── 📄 __init__.py                        # Python: Marca carpeta como paquete
+  │   ├── deployment/
+  │   │   ├── deployment-guide.md             # Guía de despliegue a AWS
+  │   │   └── local-testing-guide.md          # Guía de testing local
   │   │
-  │   ├── 📄 test_api.py                        # Testing: Pruebas de endpoints FastAPI
-  │   ├── 📄 test_model.py                      # Testing: Pruebas del modelo ML (carga, inferencia)
-  │   ├── 📄 test_preprocessing.py              # Testing: Pruebas de preprocesamiento de datos
-  │   ├── 📄 test_ocr.py                        # Testing: Pruebas de extracción OCR
-  │   ├── 📄 test_database.py                   # Testing: Pruebas de conexión y operaciones BD
-  │   ├── 📄 test_mysql_connection.py           # Testing: Pruebas de conectividad MySQL RDS
-  │   ├── 📄 test_ci_validation.py              # CI/CD: Validación de métricas del modelo (gate crítico)
-  │   ├── 📄 test_api_stability.py              # Testing: Pruebas de estabilidad de la API
-  │   │
-  │   └── 📁 fixtures/                          # Testing: Datos de prueba (facturas dummy)
+  │   └── runbooks/
+  │       ├── incident-response.md            # Procedimientos respuesta a incidentes
+  │       └── scaling-guide.md                # Guía de escalamiento del sistema
   │
-  ├── 📁 logs/                                   # Logs: Archivos de logging del sistema (ignorado por Git)
-  │   ├── app.log                               # Logs: Logs de la aplicación FastAPI
-  │   ├── etl.log                               # Logs: Logs del pipeline ETL
-  │   └── training.log                          # Logs: Logs del entrenamiento de modelos
+  ├── infrastructure/
+  │   └── terraform/
+  │       ├── alb.tf                          # Application Load Balancer + Target Groups
+  │       ├── cloudwatch.tf                   # Log Groups y métricas CloudWatch
+  │       ├── ecr.tf                          # Elastic Container Registry
+  │       ├── ecs.tf                          # Cluster ECS + Services + Tasks
+  │       ├── iam.tf                          # Roles y políticas IAM
+  │       ├── main.tf                         # Provider y configuración Terraform
+  │       ├── mwaa.tf                         # MWAA Environment y configuración
+  │       ├── outputs.tf                      # Outputs Terraform (ALB URL, ARNs)
+  │       ├── s3.tf                           # Buckets S3 (facturas, DAGs, DVC)
+  │       ├── secrets.tf                      # Secrets Manager secrets
+  │       ├── variables.tf                    # Variables Terraform
+  │       └── vpc.tf                          # VPC, Subnets, Security Groups, NAT
   │
-  ├── 📁 notebooks/                              # EDA: Jupyter notebooks para exploración (si existieran)
-  │   ├── 01_exploratory_analysis.ipynb         # EDA: Análisis exploratorio de datos
-  │   ├── 02_model_experiments.ipynb            # ML: Experimentos de arquitecturas de modelos
-  │   └── 03_drift_analysis.ipynb               # MLOps: Análisis de drift detection
+  ├── modelos/
+  │   ├── .gitignore                          # Ignora modelos binarios (.h5)
+  │   ├── historial_entrenamiento.npy.dvc    # DVC pointer a historial en S3
+  │   ├── mapeo_etiquetas.npy.dvc            # DVC pointer a mapeo clases en S3
+  │   └── modelo_facturas_final.h5.dvc       # DVC pointer a modelo CNN en S3
   │
-  ├── 📁 scripts/                                # Scripts: Utilidades de línea de comandos (si existieran)
-  │   ├── 📄 download_from_drive.py             # Script: Descarga masiva desde Google Drive
-  │   ├── 📄 setup_database.py                  # Script: Inicialización de tablas MySQL
-  │   └── 📄 generate_baseline.py               # Script: Genera baseline para drift detection
+  ├── requirements/
+  │   ├── aws.txt                             # Dependencias específicas de AWS (boto3)
+  │   ├── base.txt                            # Dependencias base (FastAPI, TensorFlow)
+  │   ├── development.txt                     # Dependencias desarrollo (pytest, black)
+  │   └── mwaa.txt                            # Dependencias para MWAA (Airflow providers)
   │
-  └── 📄 README.md                               # Docs: Documentación principal del proyecto
+  ├── scripts/
+  │   └── setup/
+  │       └── setup-secrets.py                # Script setup inicial de secrets en AWS
+  │
+  ├── tests/
+  │   ├── __init__.py                         # Inicialización módulo tests
+  │   ├── conftest.py                         # Fixtures pytest compartidos
+  │   ├── test_api_stability.py              # Tests estabilidad de endpoints FastAPI
+  │   ├── test_ci_validation.py              # Tests validación CI/CD
+  │   ├── test_mysql_connection.py           # Tests conexión a MySQL
+  │   └── test_preprocessing.py              # Tests preprocesamiento de imágenes
+  │
+  ├── .dvc/
+  │   ├── .gitignore                          # Archivos DVC ignorados por Git
+  │   └── last_push_hash.txt                  # Hash último DVC push
+  │
+  ├── .gitignore                              # Archivos ignorados por Git
+  ├── credentials.json                        # Service account Google Drive
+  ├── token.json                              # Token OAuth2 Google Drive
+  ├── README-PRODUCTION.md                    # README producción con arquitectura AWS
+  └── requirements.txt                        # Dependencias principales del proyecto
     """, language=None)
     
     st.markdown("---")
+    
+    # Título Manual de Despliegue
+    st.markdown("""
+    <div style="margin: 3rem 0 2rem 0;">
+        <h2 style="font-size: 2.5rem; font-weight: 700; color: #1d1d1f; margin-bottom: 1rem; letter-spacing: -0.02em; text-align: center;">
+            Manual de Despliegue - Proyecto ETL Facturas AWS
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Manual de Despliegue
+    with st.expander("Paso 1: Verificar Infraestructura Existente", expanded=False):
+        st.markdown("### Obtén información de la infraestructura")
+        st.code("""
+cd infrastructure/terraform
+
+# Actualiza estado de Terraform
+terraform refresh
+
+# Obtén valores críticos
+terraform output > outputs.txt
+cat outputs.txt
+""", language="bash")
+        st.markdown("**Valores que necesitarás (anótalos):**")
+        st.markdown("""
+- `ecr_repository_url`
+- `alb_dns_name`
+- `ecs_cluster_name`
+- `s3_dags_bucket`
+- `s3_dvc_bucket`
+- `rds_endpoint`
+- `mwaa_webserver_url`
+- `ecs_security_group_id`
+- `private_subnet_ids`
+- `alb_target_group_arn`
+""")
+    
+    with st.expander("Paso 2: Setup Local", expanded=False):
+        st.code("""
+# Clona el repositorio
+cd ~/workspace
+git clone <URL_REPOSITORIO>
+cd etl_facturas_textil
+
+# Configura AWS CLI (si no está configurado)
+aws configure
+# Region: us-east-1
+# Output: json
+
+# Verifica acceso
+aws sts get-caller-identity
+
+# Crea entorno virtual
+python3 -m venv venv
+source venv/bin/activate
+
+# Instala dependencias
+pip install -r requirements/base.txt
+pip install -r requirements/aws.txt
+pip install dvc dvc-s3
+""", language="bash")
+    
+    with st.expander("Paso 3: Configurar Secrets en AWS Secrets Manager", expanded=False):
+        st.markdown("#### 3.1 Google Drive Credentials:")
+        st.code("""
+# Verifica que tienes credentials.json en el proyecto
+ls -l credentials.json
+
+# Sube a Secrets Manager
+aws secretsmanager create-secret \\
+  --name etl-facturas/google-credentials \\
+  --description "Google Drive Service Account credentials" \\
+  --secret-string file://credentials.json \\
+  --region us-east-1
+""", language="bash")
+        
+        st.markdown("#### 3.2 MySQL Connection:")
+        st.code("""
+# Obtén RDS endpoint
+RDS_ENDPOINT=$(cd infrastructure/terraform && terraform output -raw rds_endpoint)
+
+# Crea secret de MySQL
+aws secretsmanager create-secret \\
+  --name etl-facturas/mysql-connection \\
+  --description "MySQL RDS connection string" \\
+  --secret-string "{
+    \\"host\\": \\"$RDS_ENDPOINT\\",
+    \\"port\\": \\"3306\\",
+    \\"database\\": \\"textil\\",
+    \\"username\\": \\"admin\\",
+    \\"password\\": \\"TU_PASSWORD_MYSQL\\"
+  }" \\
+  --region us-east-1
+""", language="bash")
+        
+        st.markdown("#### 3.3 Google Drive Folder IDs:")
+        st.code("""
+# Crea secret con IDs de carpetas Drive
+aws secretsmanager create-secret \\
+  --name etl-facturas/drive-config \\
+  --description "Google Drive folder IDs" \\
+  --secret-string "{
+    \\"folder_train_id\\": \\"ID_CARPETA_INVOICES_TRAIN\\",
+    \\"folder_test_id\\": \\"ID_CARPETA_INVOICES_TEST\\",
+    \\"folder_pendientes_id\\": \\"ID_CARPETA_PENDIENTES\\",
+    \\"folder_resultados_id\\": \\"ID_CARPETA_RESULTADOS\\",
+    \\"folder_historico_id\\": \\"ID_CARPETA_HISTORICO\\",
+    \\"folder_correctivos_id\\": \\"ID_CARPETA_CORRECTIVOS\\",
+    \\"folder_preventivos_id\\": \\"ID_CARPETA_PREVENTIVOS\\"
+  }" \\
+  --region us-east-1
+
+# Verificar secrets creados
+aws secretsmanager list-secrets --region us-east-1 | grep etl-facturas
+""", language="bash")
+    
+    with st.expander("Paso 4: Build y Push de Imagen Docker a ECR", expanded=False):
+        st.code("""
+# Obtén URL del repositorio ECR
+ECR_REPO=$(cd infrastructure/terraform && terraform output -raw ecr_repository_url)
+echo "ECR Repository: $ECR_REPO"
+
+# Login en ECR
+aws ecr get-login-password --region us-east-1 | \\
+  docker login --username AWS --password-stdin $ECR_REPO
+
+# Build de la imagen
+docker build -f docker/Dockerfile -t etl-facturas:latest .
+
+# Tag con versión
+VERSION=$(date +%Y%m%d-%H%M%S)
+docker tag etl-facturas:latest $ECR_REPO:$VERSION
+docker tag etl-facturas:latest $ECR_REPO:latest
+
+# Push a ECR
+docker push $ECR_REPO:$VERSION
+docker push $ECR_REPO:latest
+
+# Anota la versión
+echo "Imagen desplegada: $ECR_REPO:$VERSION"
+""", language="bash")
+    
+    with st.expander("Paso 5: Registrar Task Definitions en ECS", expanded=False):
+        st.markdown("#### 5.1 Actualizar Task Definition de FastAPI:")
+        st.code("""
+cd aws/ecs/task-definitions
+
+# Obtén valores necesarios
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+REGION="us-east-1"
+ECR_IMAGE="$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/etl-facturas-textil:latest"
+
+# Crea task definition FastAPI actualizada
+cat > fastapi-task-updated.json <<EOF
+{
+  "family": "fastapi-service",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::$ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::$ACCOUNT_ID:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "fastapi",
+      "image": "$ECR_IMAGE",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {"name": "ENV", "value": "production"},
+        {"name": "AWS_DEFAULT_REGION", "value": "$REGION"}
+      ],
+      "secrets": [
+        {
+          "name": "GOOGLE_CREDENTIALS",
+          "valueFrom": "arn:aws:secretsmanager:$REGION:$ACCOUNT_ID:secret:etl-facturas/google-credentials"
+        },
+        {
+          "name": "MYSQL_CONNECTION",
+          "valueFrom": "arn:aws:secretsmanager:$REGION:$ACCOUNT_ID:secret:etl-facturas/mysql-connection"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fastapi",
+          "awslogs-region": "$REGION",
+          "awslogs-stream-prefix": "fastapi"
+        }
+      }
+    }
+  ]
+}
+EOF
+
+# Registra task definition
+aws ecs register-task-definition \\
+  --cli-input-json file://fastapi-task-updated.json \\
+  --region us-east-1
+
+# Anota el número de revisión
+FASTAPI_TASK_REVISION=$(aws ecs describe-task-definition \\
+  --task-definition fastapi-service \\
+  --query 'taskDefinition.revision' \\
+  --output text)
+
+echo "FastAPI Task Definition: fastapi-service:$FASTAPI_TASK_REVISION"
+""", language="bash")
+        
+        st.markdown("#### 5.2 Actualizar Task Definition de Training:")
+        st.code("""
+# Crea task definition Training actualizada
+cat > training-task-updated.json <<EOF
+{
+  "family": "model-training",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "8192",
+  "memory": "32768",
+  "executionRoleArn": "arn:aws:iam::$ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::$ACCOUNT_ID:role/ecsTaskRoleTraining",
+  "containerDefinitions": [
+    {
+      "name": "trainer",
+      "image": "$ECR_IMAGE",
+      "essential": true,
+      "command": ["python", "app/model.py"],
+      "environment": [
+        {"name": "ENV", "value": "production"},
+        {"name": "AWS_DEFAULT_REGION", "value": "$REGION"},
+        {"name": "TRAIN_BATCH_SIZE", "value": "16"},
+        {"name": "TRAIN_EPOCHS", "value": "50"}
+      ],
+      "secrets": [
+        {
+          "name": "GOOGLE_CREDENTIALS",
+          "valueFrom": "arn:aws:secretsmanager:$REGION:$ACCOUNT_ID:secret:etl-facturas/google-credentials"
+        },
+        {
+          "name": "MYSQL_CONNECTION",
+          "valueFrom": "arn:aws:secretsmanager:$REGION:$ACCOUNT_ID:secret:etl-facturas/mysql-connection"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/model-training",
+          "awslogs-region": "$REGION",
+          "awslogs-stream-prefix": "training"
+        }
+      }
+    }
+  ]
+}
+EOF
+
+# Registra task definition
+aws ecs register-task-definition \\
+  --cli-input-json file://training-task-updated.json \\
+  --region us-east-1
+
+TRAINING_TASK_REVISION=$(aws ecs describe-task-definition \\
+  --task-definition model-training \\
+  --query 'taskDefinition.revision' \\
+  --output text)
+
+echo "Training Task Definition: model-training:$TRAINING_TASK_REVISION"
+""", language="bash")
+    
+    with st.expander("Paso 6: Crear o Actualizar ECS Service de FastAPI", expanded=False):
+        st.markdown("#### 6.1 Verificar si el servicio existe:")
+        st.code("""
+cd ../../../
+
+# Obtén valores de Terraform
+CLUSTER_NAME=$(cd infrastructure/terraform && terraform output -raw ecs_cluster_name)
+SUBNET_IDS=$(cd infrastructure/terraform && terraform output -json private_subnet_ids)
+SUBNET_1=$(echo $SUBNET_IDS | jq -r '.[0]')
+SUBNET_2=$(echo $SUBNET_IDS | jq -r '.[1]')
+SG_ID=$(cd infrastructure/terraform && terraform output -raw ecs_security_group_id)
+TG_ARN=$(cd infrastructure/terraform && terraform output -raw alb_target_group_arn)
+
+# Verifica si existe el servicio
+aws ecs describe-services \\
+  --cluster $CLUSTER_NAME \\
+  --services fastapi-service \\
+  --region us-east-1 \\
+  --query 'services[0].status' \\
+  --output text
+""", language="bash")
+        
+        st.markdown("#### 6.2 Si el servicio NO existe, créalo:")
+        st.code("""
+aws ecs create-service \\
+  --cluster $CLUSTER_NAME \\
+  --service-name fastapi-service \\
+  --task-definition fastapi-service:$FASTAPI_TASK_REVISION \\
+  --desired-count 1 \\
+  --launch-type FARGATE \\
+  --network-configuration "awsvpcConfiguration={
+    subnets=[$SUBNET_1,$SUBNET_2],
+    securityGroups=[$SG_ID],
+    assignPublicIp=DISABLED
+  }" \\
+  --load-balancers "targetGroupArn=$TG_ARN,containerName=fastapi,containerPort=8000" \\
+  --health-check-grace-period-seconds 60 \\
+  --region us-east-1
+""", language="bash")
+        
+        st.markdown("#### 6.3 Si el servicio YA existe, actualízalo:")
+        st.code("""
+aws ecs update-service \\
+  --cluster $CLUSTER_NAME \\
+  --service fastapi-service \\
+  --task-definition fastapi-service:$FASTAPI_TASK_REVISION \\
+  --force-new-deployment \\
+  --region us-east-1
+""", language="bash")
+        
+        st.markdown("#### 6.4 Espera a que el servicio esté estable:")
+        st.code("""
+aws ecs wait services-stable \\
+  --cluster $CLUSTER_NAME \\
+  --services fastapi-service \\
+  --region us-east-1
+
+echo "✓ Servicio FastAPI desplegado y estable"
+""", language="bash")
+    
+    with st.expander("Paso 7: Subir DAGs a MWAA (S3)", expanded=False):
+        st.code("""
+# Obtén bucket de DAGs
+DAGS_BUCKET=$(cd infrastructure/terraform && terraform output -raw s3_dags_bucket)
+echo "Bucket DAGs: $DAGS_BUCKET"
+
+# Sube DAGs
+aws s3 cp airflow/dags/etl_production.py s3://$DAGS_BUCKET/dags/
+aws s3 cp airflow/dags/train_production.py s3://$DAGS_BUCKET/dags/
+aws s3 cp airflow/dags/drift_production.py s3://$DAGS_BUCKET/dags/
+
+# Sube configuración de DAGs
+aws s3 cp airflow/dags/config/ s3://$DAGS_BUCKET/dags/config/ --recursive
+
+# Sube requirements de MWAA
+aws s3 cp aws/mwaa/requirements.txt s3://$DAGS_BUCKET/requirements.txt
+
+# Verifica archivos subidos
+aws s3 ls s3://$DAGS_BUCKET/dags/
+aws s3 ls s3://$DAGS_BUCKET/
+
+# Espera 5-10 minutos para que MWAA detecte y actualice los DAGs.
+""", language="bash")
+    
+    with st.expander("Paso 8: Configurar DVC Remote", expanded=False):
+        st.code("""
+# Obtén bucket DVC
+DVC_BUCKET=$(cd infrastructure/terraform && terraform output -raw s3_dvc_bucket)
+echo "Bucket DVC: $DVC_BUCKET"
+
+# Inicializa DVC (si no está inicializado)
+dvc init --no-scm
+
+# Configura remote S3
+dvc remote add -d myremote s3://$DVC_BUCKET/dvc-storage
+dvc remote modify myremote region us-east-1
+
+# Verifica configuración
+cat .dvc/config
+""", language="bash")
+    
+    with st.expander("Paso 9: Subir Modelo Inicial con DVC", expanded=False):
+        st.markdown("#### Opción A - Si tienes modelo pre-entrenado:")
+        st.code("""
+# Verifica que el modelo existe
+ls -lh modelos/modelo_facturas_final.h5
+
+# Trackea con DVC
+dvc add modelos/modelo_facturas_final.h5
+
+# Sube a S3
+dvc push
+
+# Commit archivos DVC
+git add modelos/modelo_facturas_final.h5.dvc modelos/.gitignore .dvc/config
+git commit -m "Add modelo inicial con DVC"
+git push
+""", language="bash")
+        
+        st.markdown("#### Opción B - Si NO tienes modelo (ejecutar training después):")
+        st.markdown("Continúa al siguiente paso. El training generará el modelo.")
+    
+    with st.expander("Paso 10: Verificar Despliegue", expanded=False):
+        st.markdown("#### 10.1 Health Check FastAPI:")
+        st.code("""
+# Obtén ALB DNS
+ALB_DNS=$(cd infrastructure/terraform && terraform output -raw alb_dns_name)
+echo "ALB URL: http://$ALB_DNS"
+
+# Health check (espera 2-3 minutos si acabas de desplegar)
+curl -f http://$ALB_DNS/health
+# Esperado: {"status":"healthy"}
+
+# Endpoint raíz
+curl http://$ALB_DNS/ | jq
+# Esperado: JSON con info de la API
+""", language="bash")
+        
+        st.markdown("#### 10.2 Verifica Logs ECS:")
+        st.code("""
+# Logs recientes FastAPI
+aws logs tail /ecs/fastapi --follow --since 5m
+# Ctrl+C para salir
+
+# Verifica que no haya errores críticos
+""", language="bash")
+        
+        st.markdown("#### 10.3 Verifica MWAA:")
+        st.code("""
+# Obtén URL de Airflow
+MWAA_URL=$(cd infrastructure/terraform && terraform output -raw mwaa_webserver_url)
+echo "Airflow UI: https://$MWAA_URL"
+""", language="bash")
+        st.markdown("Abre la URL en el navegador:")
+        st.markdown("""
+- Login con tus credenciales AWS
+- Verifica que aparezcan los 3 DAGs:
+  - `process_invoices_etl_aws`
+  - `train_invoice_model_aws`
+  - `drift_detection_weekly`
+""")
+    
+    with st.expander("Paso 11: Ejecutar Primera Prueba - Training", expanded=False):
+        st.markdown("#### 11.1 Verifica datos en Google Drive:")
+        st.markdown("Asegúrate de tener:")
+        st.markdown("""
+- `invoices_train/0/` con PDFs de correctivas (min 500)
+- `invoices_train/1/` con PDFs de preventivas (min 500)
+- `invoices_test/0/` y `invoices_test/1/` con PDFs de test (min 100 c/u)
+""")
+        
+        st.markdown("#### 11.2 Activa DAG de Training en Airflow UI:")
+        st.markdown("""
+- Ve a Airflow UI
+- DAG: `train_invoice_model_aws`
+- Click en el toggle para Unpause
+- Click en "Trigger DAG" (icono de play)
+""")
+        
+        st.markdown("#### 11.3 Monitorea ejecución:")
+        st.code("""
+# Espera que aparezca la task en ECS
+sleep 30
+
+# Obtén task ARN
+TASK_ARN=$(aws ecs list-tasks \\
+  --cluster $CLUSTER_NAME \\
+  --family model-training \\
+  --query 'taskArns[0]' \\
+  --output text)
+
+echo "Training Task: $TASK_ARN"
+
+# Sigue logs
+aws logs tail /ecs/model-training --follow
+
+# Duración esperada: 45-60 minutos
+""", language="bash")
+        
+        st.markdown("#### 11.4 Verifica resultado:")
+        st.code("""
+# Pull modelo generado
+dvc pull modelos/modelo_facturas_final.h5.dvc
+
+# Verifica archivo
+ls -lh modelos/modelo_facturas_final.h5
+# Esperado: ~50-150MB
+
+# Verifica tracking en MySQL
+mysql -h $(cd infrastructure/terraform && terraform output -raw rds_endpoint) -u admin -p
+
+USE textil;
+SELECT id, timestamp, test_accuracy, test_precision, test_recall
+FROM tracking
+ORDER BY timestamp DESC
+LIMIT 1;
+""", language="bash")
+    
+    with st.expander("Paso 12: Ejecutar Primera Prueba - ETL", expanded=False):
+        st.markdown("#### 12.1 Prepara datos de prueba:")
+        st.markdown("Sube 5-10 PDFs de facturas a la carpeta `facturas_pendientes/` en Google Drive.")
+        
+        st.markdown("#### 12.2 Configura variable en Airflow:")
+        st.markdown("En Airflow UI:")
+        st.markdown("""
+- Admin → Variables → Add Variable
+- Key: `ETL_USE_ECS_TASK`
+- Value: `false` (para usar endpoint ALB, más simple)
+""")
+        
+        st.markdown("#### 12.3 Activa DAG ETL:")
+        st.markdown("""
+- DAG: `process_invoices_etl_aws`
+- Unpause
+- Trigger DAG manualmente
+""")
+        
+        st.markdown("#### 12.4 Monitorea:")
+        st.code("""
+# Estado del procesamiento
+curl http://$ALB_DNS/procesar_facturas/status | jq
+
+# Logs FastAPI
+aws logs tail /ecs/fastapi --follow --since 10m
+""", language="bash")
+        
+        st.markdown("#### 12.5 Verifica resultados:")
+        st.code("""
+# Google Drive: Archivos en carpetas correctivos/ y preventivos/
+# MySQL: Registros en tablas
+
+mysql -h $(cd infrastructure/terraform && terraform output -raw rds_endpoint) -u admin -p
+
+USE textil;
+SELECT COUNT(*) as total_correctivas FROM ventas_correctivas;
+SELECT COUNT(*) as total_preventivas FROM ventas_preventivas;
+
+# Últimos registros
+SELECT * FROM ventas_correctivas ORDER BY created_at DESC LIMIT 5;
+""", language="bash")
+    
+    with st.expander("Paso 13: Activar Ejecución Automática", expanded=False):
+        st.markdown("En Airflow UI:")
+        st.markdown("""
+**ETL (cada hora):**
+- DAG: `process_invoices_etl_aws`
+- Ya tiene schedule: `0 * * * *`
+- Solo asegúrate que esté Unpaused
+
+**Drift Detection (semanal):**
+- DAG: `drift_detection_weekly`
+- Schedule: `0 3 * * 0` (Domingos 3 AM)
+- Unpause
+
+**Training:**
+- DAG: `train_invoice_model_aws`
+- Mantener Paused
+- Solo ejecutar manualmente o cuando drift lo dispare
+""")
+    
+    with st.expander("Paso 14: Configurar Alarmas CloudWatch (Recomendado)", expanded=False):
+        st.code("""
+# Alarma: ECS Service sin tasks corriendo
+aws cloudwatch put-metric-alarm \\
+  --alarm-name etl-fastapi-no-running-tasks \\
+  --alarm-description "FastAPI service has no running tasks" \\
+  --metric-name RunningTasksCount \\
+  --namespace AWS/ECS \\
+  --statistic Average \\
+  --period 300 \\
+  --evaluation-periods 2 \\
+  --threshold 1 \\
+  --comparison-operator LessThanThreshold \\
+  --dimensions Name=ServiceName,Value=fastapi-service Name=ClusterName,Value=$CLUSTER_NAME
+
+# Alarma: ALB sin healthy targets
+aws cloudwatch put-metric-alarm \\
+  --alarm-name etl-alb-no-healthy-targets \\
+  --alarm-description "ALB has no healthy targets" \\
+  --metric-name HealthyHostCount \\
+  --namespace AWS/ApplicationELB \\
+  --statistic Average \\
+  --period 60 \\
+  --evaluation-periods 2 \\
+  --threshold 1 \\
+  --comparison-operator LessThanThreshold
+""", language="bash")
+    
+    st.markdown("---")
+    
+    st.markdown("### Verificación Final - Checklist")
+    st.markdown("""
+- ✓ FastAPI responde en `http://$ALB_DNS/health`
+- ✓ Airflow UI accesible y muestra 3 DAGs
+- ✓ ECS Service fastapi-service con 1 task RUNNING
+- ✓ Secrets configurados en Secrets Manager (3 secrets)
+- ✓ Imagen Docker en ECR con tag latest
+- ✓ DAGs subidos a S3 MWAA bucket
+- ✓ DVC configurado con remote S3
+- ✓ Modelo disponible en S3 (verificar con dvc pull)
+- ✓ Training ejecutado 1 vez exitosamente
+- ✓ ETL ejecutado 1 vez exitosamente
+- ✓ Datos extraídos visibles en MySQL
+- ✓ DAG ETL unpaused para ejecución horaria
+""")
+    
+    st.markdown("---")
+    
+    st.markdown("### Comandos Útiles Post-Deploy")
+    st.code("""
+# Ver estado de servicios
+aws ecs describe-services --cluster $CLUSTER_NAME --services fastapi-service
+
+# Forzar nuevo despliegue
+aws ecs update-service \\
+  --cluster $CLUSTER_NAME \\
+  --service fastapi-service \\
+  --force-new-deployment
+
+# Ver logs en tiempo real
+aws logs tail /ecs/fastapi --follow
+aws logs tail /ecs/model-training --follow
+
+# Escalar servicio
+aws ecs update-service \\
+  --cluster $CLUSTER_NAME \\
+  --service fastapi-service \\
+  --desired-count 2
+
+# Ver DAGs en S3
+aws s3 ls s3://$DAGS_BUCKET/dags/
+""", language="bash")
+    
+    st.markdown("---")
+    
+    st.success("🎉 **¡Despliegue completado!** El sistema está operativo y procesará facturas automáticamente cada hora.")
 
 with tab3:
     # Título Pipeline ETL
